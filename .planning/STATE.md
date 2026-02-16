@@ -10,27 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 2 of 5 (Hero & Conversion)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-16 — Phase 1 verified and complete
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-16 — Completed 02-01-PLAN.md
 
-Progress: [███░░░░░░░░░░] 3/13 (~23%)
+Progress: [████░░░░░░░░░] 4/13 (~31%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 3 min
-- Total execution time: 9 min
+- Total plans completed: 4
+- Average duration: 2.75 min
+- Total execution time: 11 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Foundation | 3/3 | 9 min | 3 min |
+| 2. Hero & Conversion | 1/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4 min), 01-02 (3 min), 01-03 (2 min)
+- Last 5 plans: 01-01 (4 min), 01-02 (3 min), 01-03 (2 min), 02-01 (2 min)
 - Trend: improving
 
 *Updated after each plan completion*
@@ -51,6 +52,8 @@ Recent decisions affecting current work:
 - [01-02]: NEXT_PUBLIC_CTA_MODE prefix required for client component env var access in Next.js
 - [01-03]: Explicit ButtonProps (not extending HTML button props) to avoid motion onDrag type conflict
 - [01-03]: cn() utility in src/lib/utils.ts (clsx + tailwind-merge) for all className composition
+- [02-01]: AnimatePresence mode="wait" for inline form-to-success crossfade (no toast, no navigation)
+- [02-01]: Two counter-rotating circles for geometric accent at 3-4% opacity — ambient depth, not a feature
 
 ### Pending Todos
 
@@ -65,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Phase 1 verified and complete, ready for Phase 2
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None

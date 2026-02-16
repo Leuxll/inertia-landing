@@ -50,7 +50,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Hero section with layered headline hierarchy, interactive CtaBlock (email form + App Store button), geometric accent (Wave 1)
+- [x] 02-01-PLAN.md — Hero section with layered headline hierarchy, interactive CtaBlock (email form + App Store button), geometric accent (Wave 1)
 - [ ] 02-02-PLAN.md — Email capture backend: Resend API route, validation, rate limiting, welcome email template (Wave 1)
 - [ ] 02-03-PLAN.md — Sticky nav, footer with links and social icons, bottom CTA repeat with "Ready?" nudge, waitlist counter (Wave 2)
 
@@ -109,7 +109,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
 | 1. Foundation & Design System | 3/3 | ✓ Verified | 2026-02-16 |
-| 2. Hero & Conversion | 0/3 | Not started | - |
+| 2. Hero & Conversion | 1/3 | In progress | - |
 | 3. Feature Sections & Content | 0/3 | Not started | - |
 | 4. Remotion Integration | 0/2 | Not started | - |
 | 5. Polish & Performance | 0/2 | Not started | - |
