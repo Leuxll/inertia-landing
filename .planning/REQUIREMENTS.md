@@ -93,39 +93,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HERO-01 | — | Pending |
-| HERO-02 | — | Pending |
-| HERO-03 | — | Pending |
-| HERO-04 | — | Pending |
-| HERO-05 | — | Pending |
-| HERO-06 | — | Pending |
-| HERO-07 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| FEAT-01 | — | Pending |
-| FEAT-02 | — | Pending |
-| FEAT-03 | — | Pending |
-| FEAT-04 | — | Pending |
-| FEAT-05 | — | Pending |
-| VIS-01 | — | Pending |
-| VIS-02 | — | Pending |
-| VIS-03 | — | Pending |
-| VIS-04 | — | Pending |
-| VIS-05 | — | Pending |
-| VIS-06 | — | Pending |
-| RESP-01 | — | Pending |
-| RESP-02 | — | Pending |
-| RESP-03 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
+| HERO-01 | Phase 2: Hero & Conversion | Pending |
+| HERO-02 | Phase 2: Hero & Conversion | Pending |
+| HERO-03 | Phase 2: Hero & Conversion | Pending |
+| HERO-04 | Phase 1: Foundation & Design System | Pending |
+| HERO-05 | Phase 2: Hero & Conversion | Pending |
+| HERO-06 | Phase 2: Hero & Conversion | Pending |
+| HERO-07 | Phase 2: Hero & Conversion | Pending |
+| NAV-01 | Phase 2: Hero & Conversion | Pending |
+| NAV-02 | Phase 2: Hero & Conversion | Pending |
+| NAV-03 | Phase 1: Foundation & Design System | Pending |
+| FEAT-01 | Phase 3: Feature Sections & Content | Pending |
+| FEAT-02 | Phase 3: Feature Sections & Content | Pending |
+| FEAT-03 | Phase 4: Remotion Integration | Pending |
+| FEAT-04 | Phase 3: Feature Sections & Content | Pending |
+| FEAT-05 | Phase 3: Feature Sections & Content | Pending |
+| VIS-01 | Phase 1: Foundation & Design System | Pending |
+| VIS-02 | Phase 1: Foundation & Design System | Pending |
+| VIS-03 | Phase 3: Feature Sections & Content | Pending |
+| VIS-04 | Phase 5: Polish & Performance | Pending |
+| VIS-05 | Phase 5: Polish & Performance | Pending |
+| VIS-06 | Phase 3: Feature Sections & Content | Pending |
+| RESP-01 | Phase 1: Foundation & Design System | Pending |
+| RESP-02 | Phase 5: Polish & Performance | Pending |
+| RESP-03 | Phase 1: Foundation & Design System | Pending |
+| INFRA-01 | Phase 1: Foundation & Design System | Pending |
+| INFRA-02 | Phase 2: Hero & Conversion | Pending |
+| INFRA-03 | Phase 5: Polish & Performance | Pending |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27 ⚠️
+- Mapped to phases: 27 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after initial definition*
+*Last updated: 2026-02-16 after roadmap creation*
