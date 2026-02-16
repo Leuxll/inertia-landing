@@ -12,7 +12,7 @@ The Momentum landing page is built in five phases ordered by dependency chain an
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Design System** - Next.js scaffold, dark theme, typography, smooth scroll, responsive base, CTA state config, Vercel deploy
+- [x] **Phase 1: Foundation & Design System** - Next.js scaffold, dark theme, typography, smooth scroll, responsive base, CTA state config, Vercel deploy
 - [ ] **Phase 2: Hero & Conversion** - Hero section, two-state CTA, email capture via Resend, sticky nav, footer, bottom CTA repeat
 - [ ] **Phase 3: Feature Sections & Content** - Feature showcase with device-framed screenshots, pricing section, What's Next teaser, scroll-triggered reveals
 - [ ] **Phase 4: Remotion Integration** - Animated app preview compositions embedded in feature sections, lazy-loaded below the fold
@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Next.js scaffold, Tailwind v4 dark theme tokens, font loading, placeholder page
 - [x] 01-02-PLAN.md — Lenis smooth scroll, CTA state config system, animation foundation, scroll-reveal
-- [ ] 01-03-PLAN.md — Component primitives (Button, Section, Container, Heading, Text, Divider, CtaBlock), contrast audit, responsive validation
+- [x] 01-03-PLAN.md — Component primitives (Button, Section, Container, Heading, Text, Divider, CtaBlock), contrast audit, responsive validation
 
 ### Phase 2: Hero & Conversion
 **Goal**: A functional landing page that converts visitors — hero headline above the fold, working email capture in waitlist mode, App Store link in download mode, sticky nav, footer, and bottom CTA repeat
@@ -108,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 1. Foundation & Design System | 2/3 | In progress | - |
+| 1. Foundation & Design System | 3/3 | Complete | 2026-02-16 |
 | 2. Hero & Conversion | 0/3 | Not started | - |
 | 3. Feature Sections & Content | 0/3 | Not started | - |
 | 4. Remotion Integration | 0/2 | Not started | - |
