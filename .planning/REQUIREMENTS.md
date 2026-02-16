@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **HERO-01**: User sees "The Anti-Subscription Habit Tracker" headline and subhead above the fold within 2 seconds of page load
 - [ ] **HERO-02**: User can enter email and submit to join waitlist (State A: pre-launch)
 - [ ] **HERO-03**: User sees App Store download button linking to the app listing (State B: post-launch)
-- [ ] **HERO-04**: Page state (waitlist vs download) is controlled by a single environment variable, switchable without code changes
+- [x] **HERO-04**: Page state (waitlist vs download) is controlled by a single environment variable, switchable without code changes
 - [ ] **HERO-05**: User sees a repeating CTA at the bottom of the page matching the hero CTA
 - [ ] **HERO-06**: User sees waitlist count next to email input (displayed only when count exceeds 25)
 - [ ] **HERO-07**: User receives a welcome email after joining the waitlist with Momentum branding/content
@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **NAV-01**: User sees a sticky navigation bar with logo on left and CTA button on right
 - [ ] **NAV-02**: User sees a footer with placeholder Privacy Policy, Terms of Service links and contact email
-- [ ] **NAV-03**: Page scrolls with cinematic smooth scrolling behavior (Lenis)
+- [x] **NAV-03**: Page scrolls with cinematic smooth scrolling behavior (Lenis)
 
 ### Feature Showcase
 
@@ -33,8 +33,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Design System & Visual
 
-- [ ] **VIS-01**: Page uses monochromatic dark theme matching the app (#0a0a0a background, #f4f4f0 text, #1A1A1A surfaces)
-- [ ] **VIS-02**: Page uses Playfair Display for display/headlines and Inter for body text, loaded via next/font
+- [x] **VIS-01**: Page uses monochromatic dark theme matching the app (#0a0a0a background, #f4f4f0 text, #1A1A1A surfaces)
+- [x] **VIS-02**: Page uses Playfair Display for display/headlines and Inter for body text, loaded via next/font
 - [ ] **VIS-03**: Sections animate into view with scroll-triggered reveals (fade, slide, stagger)
 - [ ] **VIS-04**: Page includes subtle parallax depth effects on background elements or device mockups
 - [ ] **VIS-05**: Interactive elements have micro-interactions (button glows, card lifts, smooth transitions)
@@ -42,13 +42,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Responsive & Accessibility
 
-- [ ] **RESP-01**: Page is fully responsive across mobile, tablet, and desktop viewports
+- [x] **RESP-01**: Page is fully responsive across mobile, tablet, and desktop viewports
 - [ ] **RESP-02**: Animations respect `prefers-reduced-motion` user setting
-- [ ] **RESP-03**: Text contrast meets WCAG AA standards on dark backgrounds
+- [x] **RESP-03**: Text contrast meets WCAG AA standards on dark backgrounds
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Page is built with Next.js App Router and deploys to Vercel
+- [x] **INFRA-01**: Page is built with Next.js App Router and deploys to Vercel
 - [ ] **INFRA-02**: Email capture uses Resend via Next.js API route with validation and rate limiting
 - [ ] **INFRA-03**: Page achieves Lighthouse performance score of 90+ on desktop
 
@@ -96,28 +96,28 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HERO-01 | Phase 2: Hero & Conversion | Pending |
 | HERO-02 | Phase 2: Hero & Conversion | Pending |
 | HERO-03 | Phase 2: Hero & Conversion | Pending |
-| HERO-04 | Phase 1: Foundation & Design System | Pending |
+| HERO-04 | Phase 1: Foundation & Design System | Complete |
 | HERO-05 | Phase 2: Hero & Conversion | Pending |
 | HERO-06 | Phase 2: Hero & Conversion | Pending |
 | HERO-07 | Phase 2: Hero & Conversion | Pending |
 | NAV-01 | Phase 2: Hero & Conversion | Pending |
 | NAV-02 | Phase 2: Hero & Conversion | Pending |
-| NAV-03 | Phase 1: Foundation & Design System | Pending |
+| NAV-03 | Phase 1: Foundation & Design System | Complete |
 | FEAT-01 | Phase 3: Feature Sections & Content | Pending |
 | FEAT-02 | Phase 3: Feature Sections & Content | Pending |
 | FEAT-03 | Phase 4: Remotion Integration | Pending |
 | FEAT-04 | Phase 3: Feature Sections & Content | Pending |
 | FEAT-05 | Phase 3: Feature Sections & Content | Pending |
-| VIS-01 | Phase 1: Foundation & Design System | Pending |
-| VIS-02 | Phase 1: Foundation & Design System | Pending |
+| VIS-01 | Phase 1: Foundation & Design System | Complete |
+| VIS-02 | Phase 1: Foundation & Design System | Complete |
 | VIS-03 | Phase 3: Feature Sections & Content | Pending |
 | VIS-04 | Phase 5: Polish & Performance | Pending |
 | VIS-05 | Phase 5: Polish & Performance | Pending |
 | VIS-06 | Phase 3: Feature Sections & Content | Pending |
-| RESP-01 | Phase 1: Foundation & Design System | Pending |
+| RESP-01 | Phase 1: Foundation & Design System | Complete |
 | RESP-02 | Phase 5: Polish & Performance | Pending |
-| RESP-03 | Phase 1: Foundation & Design System | Pending |
-| INFRA-01 | Phase 1: Foundation & Design System | Pending |
+| RESP-03 | Phase 1: Foundation & Design System | Complete |
+| INFRA-01 | Phase 1: Foundation & Design System | Complete |
 | INFRA-02 | Phase 2: Hero & Conversion | Pending |
 | INFRA-03 | Phase 5: Polish & Performance | Pending |
 
@@ -128,4 +128,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after roadmap creation*
+*Last updated: 2026-02-16 after Phase 1 completion*
