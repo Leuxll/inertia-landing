@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 2 of 5 (Hero & Conversion)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-16 — Completed 02-01-PLAN.md
+Last activity: 2026-02-16 — Completed 02-02-PLAN.md
 
-Progress: [████░░░░░░░░░] 4/13 (~31%)
+Progress: [█████░░░░░░░░] 5/13 (~38%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 2.75 min
-- Total execution time: 11 min
+- Total plans completed: 5
+- Average duration: 2.6 min
+- Total execution time: 13 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Foundation | 3/3 | 9 min | 3 min |
-| 2. Hero & Conversion | 1/3 | 2 min | 2 min |
+| 2. Hero & Conversion | 2/3 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4 min), 01-02 (3 min), 01-03 (2 min), 02-01 (2 min)
-- Trend: improving
+- Last 5 plans: 01-02 (3 min), 01-03 (2 min), 02-01 (2 min), 02-02 (2 min)
+- Trend: stable fast
 
 *Updated after each plan completion*
 
@@ -54,6 +54,9 @@ Recent decisions affecting current work:
 - [01-03]: cn() utility in src/lib/utils.ts (clsx + tailwind-merge) for all className composition
 - [02-01]: AnimatePresence mode="wait" for inline form-to-success crossfade (no toast, no navigation)
 - [02-01]: Two counter-rotating circles for geometric accent at 3-4% opacity — ambient depth, not a feature
+- [02-02]: In-memory rate limiter (no Redis) — acceptable for serverless landing page, cold starts reset
+- [02-02]: Inline HTML email, no React Email dependency — single template doesn't justify a framework
+- [02-02]: Duplicate signups return success to user but skip welcome email re-send
 
 ### Pending Todos
 
@@ -68,5 +71,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Completed 02-01-PLAN.md
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
