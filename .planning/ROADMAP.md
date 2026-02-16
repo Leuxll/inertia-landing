@@ -30,12 +30,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Page renders correctly on mobile (375px), tablet (768px), and desktop (1440px) viewports using `100dvh` for full-height sections
   4. Setting `CTA_MODE=waitlist` vs `CTA_MODE=download` environment variable changes a visible placeholder element on the page (proving the two-state config works end-to-end)
   5. All text on the page meets WCAG AA contrast ratio (4.5:1 minimum) against dark backgrounds
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 01-01: Next.js scaffold, Tailwind v4 dark theme tokens, font loading, Vercel deploy pipeline
-- [ ] 01-02: Lenis smooth scroll provider, responsive viewport setup, CTA state config system
-- [ ] 01-03: Design system validation — contrast audit, responsive breakpoints, component primitives
+- [ ] 01-01-PLAN.md — Next.js scaffold, Tailwind v4 dark theme tokens, font loading, placeholder page
+- [ ] 01-02-PLAN.md — Lenis smooth scroll, CTA state config system, animation foundation, scroll-reveal
+- [ ] 01-03-PLAN.md — Component primitives (Button, Section, Container, Heading, Text, Divider, CtaBlock), contrast audit, responsive validation
 
 ### Phase 2: Hero & Conversion
 **Goal**: A functional landing page that converts visitors — hero headline above the fold, working email capture in waitlist mode, App Store link in download mode, sticky nav, footer, and bottom CTA repeat
