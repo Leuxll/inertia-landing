@@ -5,37 +5,56 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { CtaBlock } from "@/components/ui/cta-block";
 import { GeometricAccent } from "@/components/ui/geometric-accent";
+import { WaitlistCounter } from "@/components/waitlist-counter";
+import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
-    <Section
-      id="hero"
-      fullHeight
-      className="justify-center relative overflow-hidden"
-    >
-      <GeometricAccent />
+    <main>
+      {/* Hero */}
+      <Section
+        id="hero"
+        fullHeight
+        className="justify-center relative overflow-hidden"
+      >
+        <GeometricAccent />
 
-      <Container size="narrow" className="relative z-10">
-        <ScrollReveal className="flex flex-col items-center gap-8 text-center">
-          <Text
-            variant="small"
-            className="uppercase tracking-[0.3em]"
-          >
-            Momentum
-          </Text>
+        <Container size="narrow" className="relative z-10">
+          <ScrollReveal className="flex flex-col items-center gap-8 text-center">
+            <Text
+              variant="small"
+              className="uppercase tracking-[0.3em]"
+            >
+              Momentum
+            </Text>
 
-          <Heading as="h1">
-            The Anti-Subscription{"\n"}Habit Tracker
-          </Heading>
+            <Heading as="h1">
+              The Anti-Subscription{"\n"}Habit Tracker
+            </Heading>
 
-          <Text variant="muted" className="max-w-lg text-lg md:text-xl">
-            Beautifully designed. Brutally honest. One purchase, no strings.
-            Track your habits without tracking your wallet.
-          </Text>
+            <Text variant="muted" className="max-w-lg text-lg md:text-xl">
+              Beautifully designed. Brutally honest. One purchase, no strings.
+              Track your habits without tracking your wallet.
+            </Text>
 
-          <CtaBlock className="mt-2" />
-        </ScrollReveal>
-      </Container>
-    </Section>
+            <CtaBlock className="mt-2" />
+          </ScrollReveal>
+        </Container>
+      </Section>
+
+      {/* Bottom CTA — minimal closing nudge */}
+      <Section id="bottom-cta" fullHeight={false} className="py-32">
+        <Container size="narrow">
+          <ScrollReveal className="flex flex-col items-center gap-8 text-center">
+            <Heading as="h3">Ready?</Heading>
+            <CtaBlock compact />
+            <WaitlistCounter />
+          </ScrollReveal>
+        </Container>
+      </Section>
+
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }
