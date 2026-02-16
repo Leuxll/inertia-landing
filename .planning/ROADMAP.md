@@ -47,12 +47,12 @@ Plans:
   3. In download mode: user sees an App Store download button that links to the correct app listing
   4. User sees a sticky nav bar (logo left, CTA right) that remains visible while scrolling, and a footer with Privacy Policy, Terms of Service placeholder links and contact email
   5. User sees a repeating CTA at the bottom of the page that matches the hero CTA behavior (email form or download button depending on state)
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: Hero section — headline, subhead, two-state CTA component (email form + App Store button)
-- [ ] 02-02: Email capture backend — Resend API route, validation, rate limiting, welcome email template
-- [ ] 02-03: Navigation and footer — sticky nav bar, footer with placeholder links, bottom CTA repeat, waitlist counter
+- [ ] 02-01-PLAN.md — Hero section with layered headline hierarchy, interactive CtaBlock (email form + App Store button), geometric accent (Wave 1)
+- [ ] 02-02-PLAN.md — Email capture backend: Resend API route, validation, rate limiting, welcome email template (Wave 1)
+- [ ] 02-03-PLAN.md — Sticky nav, footer with links and social icons, bottom CTA repeat with "Ready?" nudge, waitlist counter (Wave 2)
 
 ### Phase 3: Feature Sections & Content
 **Goal**: Visitors understand what Momentum does and why it's different — feature showcase sections with real app screenshots in device frames, pricing/value transparency, What's Next teaser, all animated with scroll-triggered reveals
