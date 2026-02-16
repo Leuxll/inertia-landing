@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #1a1a1a;
+  --color-text: #f4f4f0;
+  --color-text-muted: #a1a1a1;
+  --color-border: rgba(244, 244, 240, 0.1);
+  --color-cta: #ffffff;
+  --color-cta-text: #0a0a0a;
+
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-inter);
+
+  --transition-cinematic: 700ms ease-out;
+  --transition-smooth: 500ms ease-in-out;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* WCAG AA contrast-checked opacity scale for text on dark backgrounds */
+/* #f4f4f0 on #0a0a0a = 17.4:1 (AAA) */
+/* #a1a1a1 on #0a0a0a = 7.5:1 (AA) */
+/* Do NOT use text lighter than #737373 on #0a0a0a (4.5:1 boundary) */
