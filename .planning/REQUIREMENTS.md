@@ -9,18 +9,18 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Hero & Conversion
 
-- [ ] **HERO-01**: User sees "The Anti-Subscription Habit Tracker" headline and subhead above the fold within 2 seconds of page load
-- [ ] **HERO-02**: User can enter email and submit to join waitlist (State A: pre-launch)
-- [ ] **HERO-03**: User sees App Store download button linking to the app listing (State B: post-launch)
+- [x] **HERO-01**: User sees "The Anti-Subscription Habit Tracker" headline and subhead above the fold within 2 seconds of page load
+- [x] **HERO-02**: User can enter email and submit to join waitlist (State A: pre-launch)
+- [x] **HERO-03**: User sees App Store download button linking to the app listing (State B: post-launch)
 - [x] **HERO-04**: Page state (waitlist vs download) is controlled by a single environment variable, switchable without code changes
-- [ ] **HERO-05**: User sees a repeating CTA at the bottom of the page matching the hero CTA
-- [ ] **HERO-06**: User sees waitlist count next to email input (displayed only when count exceeds 25)
-- [ ] **HERO-07**: User receives a welcome email after joining the waitlist with Momentum branding/content
+- [x] **HERO-05**: User sees a repeating CTA at the bottom of the page matching the hero CTA
+- [x] **HERO-06**: User sees waitlist count next to email input (displayed only when count exceeds 25)
+- [x] **HERO-07**: User receives a welcome email after joining the waitlist with Momentum branding/content
 
 ### Navigation & Structure
 
-- [ ] **NAV-01**: User sees a sticky navigation bar with logo on left and CTA button on right
-- [ ] **NAV-02**: User sees a footer with placeholder Privacy Policy, Terms of Service links and contact email
+- [x] **NAV-01**: User sees a sticky navigation bar with logo on left and CTA button on right
+- [x] **NAV-02**: User sees a footer with placeholder Privacy Policy, Terms of Service links and contact email
 - [x] **NAV-03**: Page scrolls with cinematic smooth scrolling behavior (Lenis)
 
 ### Feature Showcase
@@ -49,7 +49,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Infrastructure
 
 - [x] **INFRA-01**: Page is built with Next.js App Router and deploys to Vercel
-- [ ] **INFRA-02**: Email capture uses Resend via Next.js API route with validation and rate limiting
+- [x] **INFRA-02**: Email capture uses Resend via Next.js API route with validation and rate limiting
 - [ ] **INFRA-03**: Page achieves Lighthouse performance score of 90+ on desktop
 
 ## v2 Requirements
@@ -93,15 +93,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HERO-01 | Phase 2: Hero & Conversion | Pending |
-| HERO-02 | Phase 2: Hero & Conversion | Pending |
-| HERO-03 | Phase 2: Hero & Conversion | Pending |
+| HERO-01 | Phase 2: Hero & Conversion | Complete |
+| HERO-02 | Phase 2: Hero & Conversion | Complete |
+| HERO-03 | Phase 2: Hero & Conversion | Complete |
 | HERO-04 | Phase 1: Foundation & Design System | Complete |
-| HERO-05 | Phase 2: Hero & Conversion | Pending |
-| HERO-06 | Phase 2: Hero & Conversion | Pending |
-| HERO-07 | Phase 2: Hero & Conversion | Pending |
-| NAV-01 | Phase 2: Hero & Conversion | Pending |
-| NAV-02 | Phase 2: Hero & Conversion | Pending |
+| HERO-05 | Phase 2: Hero & Conversion | Complete |
+| HERO-06 | Phase 2: Hero & Conversion | Complete |
+| HERO-07 | Phase 2: Hero & Conversion | Complete |
+| NAV-01 | Phase 2: Hero & Conversion | Complete |
+| NAV-02 | Phase 2: Hero & Conversion | Complete |
 | NAV-03 | Phase 1: Foundation & Design System | Complete |
 | FEAT-01 | Phase 3: Feature Sections & Content | Pending |
 | FEAT-02 | Phase 3: Feature Sections & Content | Pending |
@@ -118,7 +118,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RESP-02 | Phase 5: Polish & Performance | Pending |
 | RESP-03 | Phase 1: Foundation & Design System | Complete |
 | INFRA-01 | Phase 1: Foundation & Design System | Complete |
-| INFRA-02 | Phase 2: Hero & Conversion | Pending |
+| INFRA-02 | Phase 2: Hero & Conversion | Complete |
 | INFRA-03 | Phase 5: Polish & Performance | Pending |
 
 **Coverage:**
@@ -128,4 +128,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after Phase 1 completion*
+*Last updated: 2026-02-16 after Phase 2 completion*
