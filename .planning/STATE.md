@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 1 of 5 (Foundation & Design System)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-16 — Roadmap created, 27 requirements mapped to 5 phases
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-16 — Completed 01-01-PLAN.md
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░░░░] 1/13 (~8%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 4 min
+- Total execution time: 4 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 1. Foundation | 1/3 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: —
+- Last 5 plans: 01-01 (4 min)
 - Trend: —
 
 *Updated after each plan completion*
@@ -45,6 +45,8 @@ Recent decisions affecting current work:
 - [Roadmap]: Build in layers — foundation → conversion → content → Remotion → polish. Remotion isolated so it never blocks shipping.
 - [Roadmap]: Two-state CTA (env var) goes in Phase 1 foundation, not Phase 2, because it's an architectural decision that affects every CTA component.
 - [Roadmap]: RESP-01 and RESP-03 in Phase 1 (not Phase 5) — responsive viewport and contrast must be right from day one per research pitfall guidance.
+- [01-01]: Tailwind v4 @theme for all design tokens (no tailwind.config.ts) — CSS-native, tokens auto-become utilities
+- [01-01]: Font CSS variables on html, mapped to semantic @theme tokens (font-display, font-body)
 
 ### Pending Todos
 
@@ -59,5 +61,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: Roadmap created, ready to plan Phase 1
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None
