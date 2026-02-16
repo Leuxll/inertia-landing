@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { LenisProvider } from "@/components/providers/lenis-provider";
+import { Nav } from "@/components/nav";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -29,8 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body>
-          <LenisProvider>{children}</LenisProvider>
-        </body>
+        <Nav />
+        <LenisProvider>{children}</LenisProvider>
+      </body>
     </html>
   );
 }
