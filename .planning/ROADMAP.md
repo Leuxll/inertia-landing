@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Next.js scaffold, Tailwind v4 dark theme tokens, font loading, placeholder page
-- [ ] 01-02-PLAN.md — Lenis smooth scroll, CTA state config system, animation foundation, scroll-reveal
+- [x] 01-02-PLAN.md — Lenis smooth scroll, CTA state config system, animation foundation, scroll-reveal
 - [ ] 01-03-PLAN.md — Component primitives (Button, Section, Container, Heading, Text, Divider, CtaBlock), contrast audit, responsive validation
 
 ### Phase 2: Hero & Conversion
@@ -108,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 1. Foundation & Design System | 1/3 | In progress | - |
+| 1. Foundation & Design System | 2/3 | In progress | - |
 | 2. Hero & Conversion | 0/3 | Not started | - |
 | 3. Feature Sections & Content | 0/3 | Not started | - |
 | 4. Remotion Integration | 0/2 | Not started | - |
