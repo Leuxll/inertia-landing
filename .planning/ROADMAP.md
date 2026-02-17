@@ -68,7 +68,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — PhoneFrame device frame, FeatureSection layout component, placeholder SVGs, directional animation presets
-- [ ] 03-02-PLAN.md — Three feature content sections (habit tracking, heatmaps, customization) wired into page
+- [x] 03-02-PLAN.md — Three feature content sections (habit tracking, heatmaps, customization) wired into page
 - [ ] 03-03-PLAN.md — Pricing/value philosophy section, What's Next teaser section with upcoming feature cards
 
 ### Phase 4: Remotion Integration
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|---------------|--------|-----------|
 | 1. Foundation & Design System | 3/3 | ✓ Verified | 2026-02-16 |
 | 2. Hero & Conversion | 3/3 | ✓ Verified | 2026-02-16 |
-| 3. Feature Sections & Content | 1/3 | In progress | - |
+| 3. Feature Sections & Content | 2/3 | In progress | - |
 | 4. Remotion Integration | 0/2 | Not started | - |
 | 5. Polish & Performance | 0/2 | Not started | - |
 
