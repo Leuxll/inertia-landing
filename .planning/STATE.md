@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 ## Current Position
 
-Phase: 2 of 5 (Hero & Conversion) — Phase complete
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-16 — Completed 02-03-PLAN.md
+Phase: 3 of 5 (Feature Sections & Content)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-17 — Completed 03-01-PLAN.md
 
-Progress: [██████░░░░░░░] 6/13 (~46%)
+Progress: [███████░░░░░░] 7/13 (~54%)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 2.5 min
-- Total execution time: 15 min
+- Total plans completed: 7
+- Average duration: 2.4 min
+- Total execution time: 17 min
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [██████░░░░░░░] 6/13 (~46%)
 |-------|-------|-------|----------|
 | 1. Foundation | 3/3 | 9 min | 3 min |
 | 2. Hero & Conversion | 3/3 | 6 min | 2 min |
+| 3. Feature Sections | 1/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (2 min), 02-01 (2 min), 02-02 (2 min), 02-03 (2 min)
+- Last 5 plans: 02-01 (2 min), 02-02 (2 min), 02-03 (2 min), 03-01 (2 min)
 - Trend: stable fast
 
 *Updated after each plan completion*
@@ -60,6 +61,9 @@ Recent decisions affecting current work:
 - [02-03]: Geometric M monogram as placeholder logo mark — inline SVG, swappable when real asset available
 - [02-03]: Nav CTA uses plain button/anchor for compact sizing, not Button component
 - [02-03]: Footer is a server component — no interactivity, better performance
+- [03-01]: PhoneFrame is a server component — pure CSS + next/image, no interactivity needed
+- [03-01]: FeatureSection uses fadeUp universally with stagger rather than directional slides — simpler, mobile-consistent
+- [03-01]: Placeholder SVGs use 390x844 iPhone logical resolution with app color tokens
 
 ### Pending Todos
 
@@ -73,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: Completed 02-03-PLAN.md — Phase 2 complete
+Last session: 2026-02-17
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
