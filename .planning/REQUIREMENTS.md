@@ -25,20 +25,20 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Feature Showcase
 
-- [ ] **FEAT-01**: User can scroll through 3-5 feature sections showcasing habit tracking, heatmaps, insights, and onboarding
-- [ ] **FEAT-02**: Each feature section displays real app screenshots inside a consistent device frame (iPhone)
+- [x] **FEAT-01**: User can scroll through 3-5 feature sections showcasing habit tracking, heatmaps, insights, and onboarding
+- [x] **FEAT-02**: Each feature section displays real app screenshots inside a consistent device frame (iPhone)
 - [ ] **FEAT-03**: Key feature sections include animated Remotion compositions showing app interactions in motion
-- [ ] **FEAT-04**: User sees a "What's Next" section teasing AI reflections and token economy as upcoming features
-- [ ] **FEAT-05**: User sees a pricing/value section communicating free tier and Pro options (yearly sub or one-time purchase)
+- [x] **FEAT-04**: User sees a "What's Next" section teasing AI reflections and token economy as upcoming features
+- [x] **FEAT-05**: User sees a pricing/value section communicating free tier and Pro options (yearly sub or one-time purchase)
 
 ### Design System & Visual
 
 - [x] **VIS-01**: Page uses monochromatic dark theme matching the app (#0a0a0a background, #f4f4f0 text, #1A1A1A surfaces)
 - [x] **VIS-02**: Page uses Playfair Display for display/headlines and Inter for body text, loaded via next/font
-- [ ] **VIS-03**: Sections animate into view with scroll-triggered reveals (fade, slide, stagger)
+- [x] **VIS-03**: Sections animate into view with scroll-triggered reveals (fade, slide, stagger)
 - [ ] **VIS-04**: Page includes subtle parallax depth effects on background elements or device mockups
 - [ ] **VIS-05**: Interactive elements have micro-interactions (button glows, card lifts, smooth transitions)
-- [ ] **VIS-06**: All copy follows the philosophical/existential tone matching the Momentum app brand
+- [x] **VIS-06**: All copy follows the philosophical/existential tone matching the Momentum app brand
 
 ### Responsive & Accessibility
 
@@ -103,17 +103,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-01 | Phase 2: Hero & Conversion | Complete |
 | NAV-02 | Phase 2: Hero & Conversion | Complete |
 | NAV-03 | Phase 1: Foundation & Design System | Complete |
-| FEAT-01 | Phase 3: Feature Sections & Content | Pending |
-| FEAT-02 | Phase 3: Feature Sections & Content | Pending |
+| FEAT-01 | Phase 3: Feature Sections & Content | Complete |
+| FEAT-02 | Phase 3: Feature Sections & Content | Complete |
 | FEAT-03 | Phase 4: Remotion Integration | Pending |
-| FEAT-04 | Phase 3: Feature Sections & Content | Pending |
-| FEAT-05 | Phase 3: Feature Sections & Content | Pending |
+| FEAT-04 | Phase 3: Feature Sections & Content | Complete |
+| FEAT-05 | Phase 3: Feature Sections & Content | Complete |
 | VIS-01 | Phase 1: Foundation & Design System | Complete |
 | VIS-02 | Phase 1: Foundation & Design System | Complete |
-| VIS-03 | Phase 3: Feature Sections & Content | Pending |
+| VIS-03 | Phase 3: Feature Sections & Content | Complete |
 | VIS-04 | Phase 5: Polish & Performance | Pending |
 | VIS-05 | Phase 5: Polish & Performance | Pending |
-| VIS-06 | Phase 3: Feature Sections & Content | Pending |
+| VIS-06 | Phase 3: Feature Sections & Content | Complete |
 | RESP-01 | Phase 1: Foundation & Design System | Complete |
 | RESP-02 | Phase 5: Polish & Performance | Pending |
 | RESP-03 | Phase 1: Foundation & Design System | Complete |
@@ -128,4 +128,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after Phase 2 completion*
+*Last updated: 2026-02-17 after Phase 3 completion*
