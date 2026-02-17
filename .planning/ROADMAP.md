@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Design System** - Next.js scaffold, dark theme, typography, smooth scroll, responsive base, CTA state config, Vercel deploy
 - [x] **Phase 2: Hero & Conversion** - Hero section, two-state CTA, email capture via Resend, sticky nav, footer, bottom CTA repeat
-- [ ] **Phase 3: Feature Sections & Content** - Feature showcase with device-framed screenshots, pricing section, What's Next teaser, scroll-triggered reveals
+- [x] **Phase 3: Feature Sections & Content** - Feature showcase with device-framed screenshots, pricing section, What's Next teaser, scroll-triggered reveals
 - [ ] **Phase 4: Remotion Integration** - Animated app preview compositions embedded in feature sections, lazy-loaded below the fold
 - [ ] **Phase 5: Polish & Performance** - Parallax effects, micro-interactions, reduced-motion support, Lighthouse 90+ optimization
 
@@ -69,7 +69,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — PhoneFrame device frame, FeatureSection layout component, placeholder SVGs, directional animation presets
 - [x] 03-02-PLAN.md — Three feature content sections (habit tracking, heatmaps, customization) wired into page
-- [ ] 03-03-PLAN.md — Pricing/value philosophy section, What's Next teaser section with upcoming feature cards
+- [x] 03-03-PLAN.md — Pricing/value philosophy section, What's Next teaser section with upcoming feature cards
 
 ### Phase 4: Remotion Integration
 **Goal**: Key feature sections are elevated with animated Remotion compositions showing the app in motion — lazy-loaded to protect performance, with static screenshots as fallback
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|---------------|--------|-----------|
 | 1. Foundation & Design System | 3/3 | ✓ Verified | 2026-02-16 |
 | 2. Hero & Conversion | 3/3 | ✓ Verified | 2026-02-16 |
-| 3. Feature Sections & Content | 2/3 | In progress | - |
+| 3. Feature Sections & Content | 3/3 | ✓ Complete | 2026-02-17 |
 | 4. Remotion Integration | 0/2 | Not started | - |
 | 5. Polish & Performance | 0/2 | Not started | - |
 
