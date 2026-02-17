@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" fill="none">
+  <rect width="390" height="844" fill="#111111"/>
+
+  <!-- Status bar area -->
+  <rect x="24" y="56" width="342" height="28" rx="4" fill="#1a1a1a"/>
+
+  <!-- Header -->
+  <rect x="24" y="108" width="160" height="20" rx="4" fill="#333333"/>
+  <rect x="24" y="136" width="100" height="12" rx="3" fill="#222222"/>
+
+  <!-- Habit item 1 — checked -->
+  <rect x="24" y="180" width="342" height="64" rx="12" fill="#1a1a1a"/>
+  <circle cx="56" cy="212" r="14" fill="#f4f4f0"/>
+  <polyline points="49,212 54,217 63,207" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="82" y="200" width="120" height="12" rx="3" fill="#333333"/>
+  <rect x="82" y="218" width="80" height="8" rx="2" fill="#222222"/>
+
+  <!-- Habit item 2 — checked -->
+  <rect x="24" y="260" width="342" height="64" rx="12" fill="#1a1a1a"/>
+  <circle cx="56" cy="292" r="14" fill="#f4f4f0"/>
+  <polyline points="49,292 54,297 63,287" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="82" y="280" width="140" height="12" rx="3" fill="#333333"/>
+  <rect x="82" y="298" width="60" height="8" rx="2" fill="#222222"/>
+
+  <!-- Habit item 3 — unchecked -->
+  <rect x="24" y="340" width="342" height="64" rx="12" fill="#1a1a1a"/>
+  <circle cx="56" cy="372" r="14" stroke="#555555" stroke-width="2" fill="none"/>
+  <rect x="82" y="360" width="100" height="12" rx="3" fill="#333333"/>
+  <rect x="82" y="378" width="70" height="8" rx="2" fill="#222222"/>
+
+  <!-- Habit item 4 — unchecked -->
+  <rect x="24" y="420" width="342" height="64" rx="12" fill="#1a1a1a"/>
+  <circle cx="56" cy="452" r="14" stroke="#555555" stroke-width="2" fill="none"/>
+  <rect x="82" y="440" width="130" height="12" rx="3" fill="#333333"/>
+  <rect x="82" y="458" width="90" height="8" rx="2" fill="#222222"/>
+
+  <!-- Progress bar -->
+  <rect x="24" y="520" width="342" height="6" rx="3" fill="#1a1a1a"/>
+  <rect x="24" y="520" width="171" height="6" rx="3" fill="#f4f4f0" opacity="0.6"/>
+
+  <!-- Subtle bottom nav -->
+  <rect x="0" y="790" width="390" height="54" fill="#151515"/>
+  <circle cx="78" cy="814" r="4" fill="#555555"/>
+  <circle cx="195" cy="814" r="4" fill="#f4f4f0"/>
+  <circle cx="312" cy="814" r="4" fill="#555555"/>
+</svg>
