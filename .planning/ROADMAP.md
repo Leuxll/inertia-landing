@@ -64,12 +64,12 @@ Plans:
   3. User sees a pricing/value section clearly communicating "Free forever" with optional Pro tier (yearly subscription or one-time purchase)
   4. User sees a "What's Next" teaser section that presents AI reflections and token economy as upcoming features with an honest "coming soon" tone
   5. All copy across feature sections follows the philosophical/existential tone of the Momentum brand ("It Hurts. It Helps.", "Decode the habits that define you.")
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 03-01: ScrollReveal wrapper, FeatureSection component, PhoneFrame device frame component
-- [ ] 03-02: Feature content sections — habit tracking, heatmaps, insights, onboarding (with real screenshots)
-- [ ] 03-03: Pricing/value section, What's Next teaser section, brand copy refinement
+- [ ] 03-01-PLAN.md — PhoneFrame device frame, FeatureSection layout component, placeholder SVGs, directional animation presets
+- [ ] 03-02-PLAN.md — Three feature content sections (habit tracking, heatmaps, customization) wired into page
+- [ ] 03-03-PLAN.md — Pricing/value philosophy section, What's Next teaser section with upcoming feature cards
 
 ### Phase 4: Remotion Integration
 **Goal**: Key feature sections are elevated with animated Remotion compositions showing the app in motion — lazy-loaded to protect performance, with static screenshots as fallback
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|---------------|--------|-----------|
 | 1. Foundation & Design System | 3/3 | ✓ Verified | 2026-02-16 |
 | 2. Hero & Conversion | 3/3 | ✓ Verified | 2026-02-16 |
-| 3. Feature Sections & Content | 0/3 | Not started | - |
+| 3. Feature Sections & Content | 0/3 | Planned | - |
 | 4. Remotion Integration | 0/2 | Not started | - |
 | 5. Polish & Performance | 0/2 | Not started | - |
 
