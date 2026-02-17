@@ -7,6 +7,9 @@ import { CtaBlock } from "@/components/ui/cta-block";
 import { GeometricAccent } from "@/components/ui/geometric-accent";
 import { WaitlistCounter } from "@/components/waitlist-counter";
 import { Footer } from "@/components/footer";
+import { HabitTrackingSection } from "@/components/features/habit-tracking-section";
+import { HeatmapSection } from "@/components/features/heatmap-section";
+import { CustomizationSection } from "@/components/features/customization-section";
 
 export default function Home() {
   return (
@@ -41,6 +44,11 @@ export default function Home() {
           </ScrollReveal>
         </Container>
       </Section>
+
+      {/* Features */}
+      <HabitTrackingSection />
+      <HeatmapSection />
+      <CustomizationSection />
 
       {/* Bottom CTA — minimal closing nudge */}
       <Section id="bottom-cta" fullHeight={false} className="py-32">
