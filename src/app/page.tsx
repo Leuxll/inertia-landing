@@ -10,6 +10,8 @@ import { Footer } from "@/components/footer";
 import { HabitTrackingSection } from "@/components/features/habit-tracking-section";
 import { HeatmapSection } from "@/components/features/heatmap-section";
 import { CustomizationSection } from "@/components/features/customization-section";
+import { PricingSection } from "@/components/features/pricing-section";
+import { WhatsNextSection } from "@/components/features/whats-next-section";
 
 export default function Home() {
   return (
@@ -49,6 +51,12 @@ export default function Home() {
       <HabitTrackingSection />
       <HeatmapSection />
       <CustomizationSection />
+
+      {/* Pricing */}
+      <PricingSection />
+
+      {/* What's Next */}
+      <WhatsNextSection />
 
       {/* Bottom CTA — minimal closing nudge */}
       <Section id="bottom-cta" fullHeight={false} className="py-32">
