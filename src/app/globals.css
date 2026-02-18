@@ -22,28 +22,18 @@ html {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
 }
 
-/* Section scroll snap for full-page sections */
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: auto; /* Lenis handles smooth scroll */
-}
-
-body {
-  /* Ensure body takes full height for scroll snap */
-  min-height: 100dvh;
-}
-
-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  /* Ensure sections snap cleanly */
-  min-height: 100dvh;
-}
-
 body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Enable scroll snap via Lenis wrapper */
+  scroll-snap-type: y mandatory;
+}
+
+/* Sections snap to viewport */
+section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* WCAG AA contrast-checked opacity scale for text on dark backgrounds */
