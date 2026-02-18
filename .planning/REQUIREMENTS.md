@@ -36,21 +36,21 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **VIS-01**: Page uses monochromatic dark theme matching the app (#0a0a0a background, #f4f4f0 text, #1A1A1A surfaces)
 - [x] **VIS-02**: Page uses Playfair Display for display/headlines and Inter for body text, loaded via next/font
 - [x] **VIS-03**: Sections animate into view with scroll-triggered reveals (fade, slide, stagger)
-- [ ] **VIS-04**: Page includes subtle parallax depth effects on background elements or device mockups
-- [ ] **VIS-05**: Interactive elements have micro-interactions (button glows, card lifts, smooth transitions)
+- [x] **VIS-04**: Page includes subtle parallax depth effects on background elements or device mockups
+- [x] **VIS-05**: Interactive elements have micro-interactions (button glows, card lifts, smooth transitions)
 - [x] **VIS-06**: All copy follows the philosophical/existential tone matching the Momentum app brand
 
 ### Responsive & Accessibility
 
 - [x] **RESP-01**: Page is fully responsive across mobile, tablet, and desktop viewports
-- [ ] **RESP-02**: Animations respect `prefers-reduced-motion` user setting
+- [x] **RESP-02**: Animations respect `prefers-reduced-motion` user setting
 - [x] **RESP-03**: Text contrast meets WCAG AA standards on dark backgrounds
 
 ### Infrastructure
 
 - [x] **INFRA-01**: Page is built with Next.js App Router and deploys to Vercel
 - [x] **INFRA-02**: Email capture uses Resend via Next.js API route with validation and rate limiting
-- [ ] **INFRA-03**: Page achieves Lighthouse performance score of 90+ on desktop
+- [x] **INFRA-03**: Page achieves Lighthouse performance score of 90+ on desktop
 
 ## v2 Requirements
 
@@ -111,15 +111,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VIS-01 | Phase 1: Foundation & Design System | Complete |
 | VIS-02 | Phase 1: Foundation & Design System | Complete |
 | VIS-03 | Phase 3: Feature Sections & Content | Complete |
-| VIS-04 | Phase 5: Polish & Performance | Pending |
-| VIS-05 | Phase 5: Polish & Performance | Pending |
+| VIS-04 | Phase 5: Polish & Performance | Complete |
+| VIS-05 | Phase 5: Polish & Performance | Complete |
 | VIS-06 | Phase 3: Feature Sections & Content | Complete |
 | RESP-01 | Phase 1: Foundation & Design System | Complete |
-| RESP-02 | Phase 5: Polish & Performance | Pending |
+| RESP-02 | Phase 5: Polish & Performance | Complete |
 | RESP-03 | Phase 1: Foundation & Design System | Complete |
 | INFRA-01 | Phase 1: Foundation & Design System | Complete |
 | INFRA-02 | Phase 2: Hero & Conversion | Complete |
-| INFRA-03 | Phase 5: Polish & Performance | Pending |
+| INFRA-03 | Phase 5: Polish & Performance | Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
