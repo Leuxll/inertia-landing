@@ -99,7 +99,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — Parallax depth effects on hero background and phone frames, micro-interactions on cards, buttons, and inputs
-- [ ] 05-02-PLAN.md — Reduced-motion support across all animated components, Lighthouse 90+ optimization pass
+- [x] 05-02-PLAN.md — Reduced-motion support across all animated components, Lighthouse 90+ optimization pass
 
 ## Progress
 
@@ -112,7 +112,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Hero & Conversion | 3/3 | ✓ Verified | 2026-02-16 |
 | 3. Feature Sections & Content | 3/3 | ✓ Verified | 2026-02-17 |
 | 4. Remotion Integration | ⊘ | Skipped | - |
-| 5. Polish & Performance | 1/2 | In progress | 2026-02-18 |
+| 5. Polish & Performance | 2/2 | ✓ Complete | 2026-02-18 |
 
 ---
 *Roadmap created: 2026-02-16*
