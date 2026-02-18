@@ -79,6 +79,6 @@ export const cardHover = {
   hover: {
     y: -4,
     boxShadow: "0 12px 40px rgba(244,244,240,0.06)",
-    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] },
+    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] as const },
   },
 };

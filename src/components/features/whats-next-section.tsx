@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { fadeUp, staggerContainer } from "@/lib/animations";
+import { fadeUp, staggerContainer, cardHover } from "@/lib/animations";
 
 const upcomingFeatures = [
   {
@@ -53,23 +53,26 @@ export function WhatsNextSection() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-12 md:mt-16"
         >
           {upcomingFeatures.map((feature) => (
-            <motion.div
-              key={feature.title}
-              variants={fadeUp}
-              className="bg-surface rounded-2xl p-6 md:p-8 border border-border text-left"
-            >
-              <Text
-                variant="small"
-                className="uppercase tracking-[0.25em] mb-4"
+            <motion.div key={feature.title} variants={fadeUp}>
+              <motion.div
+                initial="rest"
+                whileHover="hover"
+                variants={cardHover}
+                className="bg-surface rounded-2xl p-6 md:p-8 border border-border text-left"
               >
-                {feature.label}
-              </Text>
+                <Text
+                  variant="small"
+                  className="uppercase tracking-[0.25em] mb-4"
+                >
+                  {feature.label}
+                </Text>
 
-              <Heading as="h4" className="mb-3">
-                {feature.title}
-              </Heading>
+                <Heading as="h4" className="mb-3">
+                  {feature.title}
+                </Heading>
 
-              <Text variant="muted">{feature.description}</Text>
+                <Text variant="muted">{feature.description}</Text>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>

@@ -123,7 +123,7 @@ export function CtaBlock({ className, compact = false }: CtaBlockProps) {
                 }}
                 disabled={status === "loading"}
                 placeholder="you@example.com"
-                className="w-full bg-surface text-text border border-border rounded-none px-4 py-4 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:outline-none disabled:opacity-50 transition-colors"
+                className="w-full bg-surface text-text border border-border rounded-none px-4 py-4 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300"
               />
               <Button
                 type="submit"
