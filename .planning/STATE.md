@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 5 of 5 (Polish & Performance) — Plans created, ready to execute
-Plan: 0 of 2 executed
-Status: Ready for execution
-Last activity: 2026-02-17 — Phase 5 plans created (skipping Phase 4 Remotion)
+Plan: 1 of 2 executed
+Status: In progress
+Last activity: 2026-02-18 — Completed 05-01-PLAN.md (Parallax & Micro-interactions)
 
-Progress: [█████████░░░░] 9/11 (~82%)
+Progress: [██████████░░] 10/11 (~91%)
 
 ## Performance Metrics
 
@@ -73,6 +73,13 @@ Recent decisions affecting current work:
 - [03-03]: WhatsNextSection has no CTA — bottom CTA immediately below handles conversion
 - [03-03]: Container narrow for pricing (intimate), default for What's Next (cards need width)
 
+- [05-01]: useScroll with no target ref for hero parallax (viewport-level tracking)
+- [05-01]: useScroll with target ref for feature section parallax (section-level tracking)
+- [05-01]: Different parallax offsets create depth perception (60px vs 30px)
+- [05-01]: Section wrapped in div to support ref forwarding for parallax tracking
+- [05-01]: Compositor-only transforms (y, opacity) for all parallax to maintain 60fps
+- [05-01]: cardHover variant uses rest/hover state names for clean whileHover usage
+
 ### Pending Todos
 
 None yet.
@@ -85,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-17
-Stopped at: Session resumed — Phase 5 plans ready (Phase 4 Remotion skipped per user decision)
+Last session: 2026-02-18
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
