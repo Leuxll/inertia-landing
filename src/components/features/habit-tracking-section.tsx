@@ -10,6 +10,7 @@ export function HabitTrackingSection() {
       screenshotSrc="/screenshots/placeholder-habits.svg"
       screenshotAlt="Momentum habit tracking interface showing daily habits with completion status"
       imagePosition="left"
+      screenshotPriority={true}
     />
   );
 }

@@ -5,9 +5,10 @@ interface PhoneFrameProps {
   src: string;
   alt: string;
   className?: string;
+  priority?: boolean;
 }
 
-export function PhoneFrame({ src, alt, className }: PhoneFrameProps) {
+export function PhoneFrame({ src, alt, className, priority }: PhoneFrameProps) {
   return (
     <div
       className={cn(
@@ -23,6 +24,7 @@ export function PhoneFrame({ src, alt, className }: PhoneFrameProps) {
         src={src}
         alt={alt}
         fill
+        priority={priority}
         className="object-cover"
         sizes="(max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
       />

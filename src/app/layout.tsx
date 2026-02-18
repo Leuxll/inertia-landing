@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     "A brutally honest, beautifully designed habit tracker that respects your wallet.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {

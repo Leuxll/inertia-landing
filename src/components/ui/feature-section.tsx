@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { Section } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
@@ -20,6 +20,7 @@ interface FeatureSectionProps {
   imagePosition?: "left" | "right";
   id?: string;
   className?: string;
+  screenshotPriority?: boolean;
 }
 
 export function FeatureSection({
@@ -31,17 +32,22 @@ export function FeatureSection({
   imagePosition = "left",
   id,
   className,
+  screenshotPriority,
 }: FeatureSectionProps) {
+  const prefersReducedMotion = useReducedMotion() ?? false;
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Track scroll progress relative to the feature section
+  // Track scroll progress relative to feature section (hooks must be called unconditionally)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
   // Parallax: phone frame drifts 20px up as section scrolls through viewport
-  const phoneY = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  const phoneYRaw = useTransform(scrollYProgress, [0, 1], [20, -20]);
+
+  // Use static 0 when reduced-motion
+  const phoneY = prefersReducedMotion ? 0 : phoneYRaw;
 
   return (
     <div ref={sectionRef}>
@@ -62,7 +68,11 @@ export function FeatureSection({
                   imagePosition === "right" && "lg:order-2",
                 )}
               >
-                <PhoneFrame src={screenshotSrc} alt={screenshotAlt} />
+                <PhoneFrame
+                  src={screenshotSrc}
+                  alt={screenshotAlt}
+                  priority={screenshotPriority}
+                />
               </motion.div>
 
               {/* Text column */}
