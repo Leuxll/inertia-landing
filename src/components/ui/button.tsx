@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cinematicTransition } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -30,15 +30,24 @@ export function Button({
   className,
   ...props
 }: ButtonProps) {
+  const prefersReducedMotion = useReducedMotion() ?? false;
   const classes = cn(base, variants[variant], className);
+
+  // Instant transitions under reduced-motion
+  const hoverAnimation = prefersReducedMotion
+    ? {}
+    : (variant === 'primary'
+        ? { scale: 1.02, boxShadow: "0 0 20px rgba(255,255,255,0.15)" }
+        : { scale: 1.02, opacity: 0.9 });
+  const tapAnimation = prefersReducedMotion ? {} : { scale: 0.98 };
 
   if (href) {
     return (
       <motion.a
         href={href}
         className={classes}
-        whileHover={{ scale: 1.02, opacity: 0.9 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={hoverAnimation}
+        whileTap={tapAnimation}
         transition={cinematicTransition}
       >
         {children}
@@ -49,8 +58,8 @@ export function Button({
   return (
     <motion.button
       className={classes}
-      whileHover={{ scale: 1.02, opacity: 0.9 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={hoverAnimation}
+      whileTap={tapAnimation}
       transition={cinematicTransition}
       {...props}
     >

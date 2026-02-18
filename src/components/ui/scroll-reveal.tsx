@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
-import { fadeUp, staggerContainer } from "@/lib/animations";
+import { motion, useReducedMotion } from "motion/react";
+import { fadeUp, staggerContainer, noMotion, noMotionStagger } from "@/lib/animations";
 import type { ReactNode } from "react";
 
 interface ScrollRevealProps {
@@ -17,7 +17,12 @@ export function ScrollReveal({
   variant = "fadeUp",
   delay = 0,
 }: ScrollRevealProps) {
-  const variants = variant === "stagger" ? staggerContainer : fadeUp;
+  const prefersReducedMotion = useReducedMotion();
+
+  // When reduced-motion: use instant-visible variants, no viewport gating needed
+  const variants = prefersReducedMotion
+    ? (variant === "stagger" ? noMotionStagger : noMotion)
+    : (variant === "stagger" ? staggerContainer : fadeUp);
 
   return (
     <motion.div
@@ -26,7 +31,7 @@ export function ScrollReveal({
       viewport={{ once: true, margin: "-100px" }}
       variants={variants}
       className={className}
-      style={delay ? { transitionDelay: `${delay}s` } : undefined}
+      style={delay && !prefersReducedMotion ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
     </motion.div>
