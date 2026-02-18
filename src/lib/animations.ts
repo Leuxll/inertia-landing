@@ -61,3 +61,24 @@ export const staggerContainer = {
     },
   },
 };
+
+// Instant-visible variant for reduced-motion contexts
+export const noMotion = {
+  hidden: { opacity: 1, y: 0, x: 0 },
+  visible: { opacity: 1, y: 0, x: 0 },
+};
+
+export const noMotionStagger = {
+  hidden: {},
+  visible: {},
+};
+
+// Micro-interaction hover for elevated cards
+export const cardHover = {
+  rest: { y: 0, boxShadow: "0 0 0 0 rgba(244,244,240,0)" },
+  hover: {
+    y: -4,
+    boxShadow: "0 12px 40px rgba(244,244,240,0.06)",
+    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] },
+  },
+};
