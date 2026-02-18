@@ -23,14 +23,21 @@ html {
 }
 
 /* Section scroll snap for full-page sections */
-main {
+html {
   scroll-snap-type: y mandatory;
-  scroll-padding-top: 0;
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+}
+
+body {
+  /* Ensure body takes full height for scroll snap */
+  min-height: 100dvh;
 }
 
 section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  /* Ensure sections snap cleanly */
+  min-height: 100dvh;
 }
 
 body {
