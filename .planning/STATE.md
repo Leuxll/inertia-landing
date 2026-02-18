@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 ## Current Position
 
 Phase: 5 of 5 (Polish & Performance) — Plans created, ready to execute
-Plan: 1 of 2 executed
-Status: In progress
-Last activity: 2026-02-18 — Completed 05-01-PLAN.md (Parallax & Micro-interactions)
+Plan: 2 of 2 executed
+Status: Phase complete
+Last activity: 2026-02-18 — Completed 05-02-PLAN.md (Reduced-Motion & Performance)
 
-Progress: [██████████░░] 10/11 (~91%)
+Progress: [████████████] 11/11 (100%)
 
 ## Performance Metrics
 
@@ -80,6 +80,11 @@ Recent decisions affecting current work:
 - [05-01]: Compositor-only transforms (y, opacity) for all parallax to maintain 60fps
 - [05-01]: cardHover variant uses rest/hover state names for clean whileHover usage
 
+- [05-02]: Always call Framer Motion hooks unconditionally, conditionally use their values (prevents hook violations)
+- [05-02]: useReducedMotion returns null on SSR, default to false with ?? operator
+- [05-02]: First phone frame (HabitTrackingSection) gets priority prop for LCP optimization
+- [05-02]: Lenis disabled via client-side matchMedia check to avoid hydration mismatch
+
 ### Pending Todos
 
 None yet.
@@ -93,5 +98,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Completed 05-01-PLAN.md
+Stopped at: Completed 05-02-PLAN.md - Phase 5 complete
 Resume file: None
