@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Design System** - Next.js scaffold, dark theme, typography, smooth scroll, responsive base, CTA state config, Vercel deploy
 - [x] **Phase 2: Hero & Conversion** - Hero section, two-state CTA, email capture via Resend, sticky nav, footer, bottom CTA repeat
 - [x] **Phase 3: Feature Sections & Content** - Feature showcase with device-framed screenshots, pricing section, What's Next teaser, scroll-triggered reveals
-- [ ] **Phase 4: Remotion Integration** - Animated app preview compositions embedded in feature sections, lazy-loaded below the fold
+- [⊘] **Phase 4: Remotion Integration** - SKIPPED — Animated app preview compositions (deferred to v2)
 - [ ] **Phase 5: Polish & Performance** - Parallax effects, micro-interactions, reduced-motion support, Lighthouse 90+ optimization
 
 ## Phase Details
@@ -111,8 +111,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation & Design System | 3/3 | ✓ Verified | 2026-02-16 |
 | 2. Hero & Conversion | 3/3 | ✓ Verified | 2026-02-16 |
 | 3. Feature Sections & Content | 3/3 | ✓ Verified | 2026-02-17 |
-| 4. Remotion Integration | 0/2 | Not started | - |
-| 5. Polish & Performance | 0/2 | Not started | - |
+| 4. Remotion Integration | ⊘ | Skipped | - |
+| 5. Polish & Performance | 0/2 | Ready | Plans created |
 
 ---
 *Roadmap created: 2026-02-16*
