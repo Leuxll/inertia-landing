@@ -95,11 +95,11 @@ Plans:
   3. With `prefers-reduced-motion: reduce` enabled in OS settings, all scroll animations, parallax effects, and Remotion compositions are disabled or replaced with static equivalents
   4. Page scores 90+ on Lighthouse performance audit (desktop), with optimized images, minimal layout shift, and efficient bundle splitting
 
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Parallax depth effects and micro-interactions across all sections
-- [ ] 05-02: Reduced-motion support, accessibility audit, Lighthouse performance optimization
+- [ ] 05-01-PLAN.md — Parallax depth effects on hero background and phone frames, micro-interactions on cards, buttons, and inputs
+- [ ] 05-02-PLAN.md — Reduced-motion support across all animated components, Lighthouse 90+ optimization pass
 
 ## Progress
 
