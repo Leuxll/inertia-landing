@@ -26,14 +26,6 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Enable scroll snap via Lenis wrapper */
-  scroll-snap-type: y mandatory;
-}
-
-/* Sections snap to viewport */
-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 /* WCAG AA contrast-checked opacity scale for text on dark backgrounds */
