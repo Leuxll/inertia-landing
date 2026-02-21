@@ -13,11 +13,15 @@ export function LenisSnap() {
 
     const snap = new Snap(lenis, {
       type: "proximity",
-      debounce: 100,
+      debounce: 260,
+      duration: 0.75,
+      distanceThreshold: "35%",
     });
 
-    // Register all <section> elements as snap targets
-    const sections = document.querySelectorAll<HTMLElement>("section");
+    // Register only sections explicitly marked for snapping.
+    const sections = document.querySelectorAll<HTMLElement>(
+      "section[data-lenis-snap='true']",
+    );
     const removeElements = snap.addElements([...sections], {
       align: ["start"],
     });

@@ -58,19 +58,24 @@ export default function Home() {
       {/* What's Next */}
       <WhatsNextSection />
 
-      {/* Bottom CTA — minimal closing nudge */}
-      <Section id="bottom-cta" fullHeight={false} className="py-32">
-        <Container size="narrow">
-          <ScrollReveal className="flex flex-col items-center gap-8 text-center">
-            <Heading as="h3">Ready?</Heading>
-            <CtaBlock compact />
-            <WaitlistCounter />
-          </ScrollReveal>
-        </Container>
-      </Section>
+      {/* Bottom CTA + Footer in one final snap panel */}
+      <Section
+        id="bottom-cta"
+        fullHeight
+        className="justify-between py-16 md:py-20 lg:py-24"
+      >
+        <div className="flex flex-1 w-full items-center">
+          <Container size="narrow">
+            <ScrollReveal className="flex flex-col items-center gap-8 text-center">
+              <Heading as="h3">Ready?</Heading>
+              <CtaBlock compact />
+              <WaitlistCounter />
+            </ScrollReveal>
+          </Container>
+        </div>
 
-      {/* Footer */}
-      <Footer />
+        <Footer className="w-full px-0 py-8 md:py-10" />
+      </Section>
     </main>
   );
 }

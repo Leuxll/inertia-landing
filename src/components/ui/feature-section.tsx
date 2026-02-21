@@ -8,7 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { PhoneFrame } from "@/components/ui/phone-frame";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { fadeUp, staggerContainer } from "@/lib/animations";
+import { fadeUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 interface FeatureSectionProps {
@@ -53,8 +53,8 @@ export function FeatureSection({
     <div ref={sectionRef}>
       <Section
         id={id}
-        fullHeight={false}
-        className={cn("py-24 md:py-32 lg:py-40", className)}
+        fullHeight
+        className={cn("justify-center py-24 md:py-28 lg:py-32", className)}
       >
         <Container>
           <ScrollReveal variant="stagger">
