@@ -40,12 +40,12 @@ export default function Home() {
               </Text>
 
               <Heading as="h1">
-                The Anti-Subscription{"\n"}Habit Tracker
+                Stop Renting{"\n"}Your Habits
               </Heading>
 
               <Text variant="muted" className="max-w-lg text-lg md:text-xl">
-                Beautifully designed. Brutally honest. One purchase, no strings.
-                Track your habits without tracking your wallet.
+                The anti-subscription tracker. $0 forever. No ads. No harvesting.
+                Just you and your discipline.
               </Text>
 
               <CtaBlock className="mt-2" />
@@ -133,9 +133,9 @@ export default function Home() {
             
             <Container size="narrow" className="relative z-10">
               <ScrollReveal className="flex flex-col items-center gap-6 text-center">
-                <Heading as="h3">Your habits deserve better.</Heading>
+                <Heading as="h3">Join the rebellion.</Heading>
                 <Text variant="muted" className="max-w-md">
-                  Free forever. No credit card. No strings attached.
+                  Free forever. Optional Pro later. Never a subscription.
                 </Text>
                 <CtaBlock compact centered />
                 <WaitlistCounter />
