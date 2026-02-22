@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { Nav } from "@/components/nav";
@@ -102,6 +103,7 @@ export default function RootLayout({
       <body>
         <Nav />
         <LenisProvider>{children}</LenisProvider>
+        <SpeedInsights />
         <Analytics />
       </body>
     </html>
