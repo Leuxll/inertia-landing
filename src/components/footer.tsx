@@ -3,20 +3,48 @@ import { cn } from "@/lib/utils";
 function FooterLogo() {
   return (
     <svg
-      width={20}
-      height={20}
+      width={32}
+      height={32}
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Momentum"
+      aria-label="Inertia"
     >
-      <path
-        d="M4 28V8L16 20L28 8V28"
+      {/* Inertia logo: circle with three foundation lines below */}
+      <circle
+        cx="16"
+        cy="12"
+        r="6"
         stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeWidth="1.5"
         fill="none"
+      />
+      <line
+        x1="10"
+        y1="26"
+        x2="10"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="16"
+        y1="28"
+        x2="16"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="22"
+        y1="26"
+        x2="22"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -37,47 +65,29 @@ function XIcon() {
   );
 }
 
-function InstagramIcon() {
-  return (
-    <svg
-      width={16}
-      height={16}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Instagram"
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" />
-      <circle cx="12" cy="12" r="5" />
-      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 const footerLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "hello@momentum-app.com", href: "mailto:hello@momentum-app.com" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "hello@getinertia.app", href: "mailto:hello@getinertia.app" },
 ];
 
 const socialLinks = [
-  { label: "X (Twitter)", href: "#", icon: XIcon },
-  { label: "Instagram", href: "#", icon: InstagramIcon },
+  { label: "X (Twitter)", href: "https://x.com/leuxlll", icon: XIcon },
 ];
+
+function isExternal(href: string): boolean {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
 
 export function Footer({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "border-t border-border py-12 px-6 md:px-8 lg:px-12",
+        "border-t border-border py-6 px-6 md:px-8 lg:px-12",
         className
       )}
     >
-      <div className="mx-auto max-w-5xl flex flex-col items-center gap-8">
+      <div className="mx-auto max-w-5xl flex flex-col items-center gap-4">
         {/* Logo */}
         <div className="text-text-muted">
           <FooterLogo />
@@ -89,6 +99,8 @@ export function Footer({ className }: { className?: string }) {
             <a
               key={link.label}
               href={link.href}
+              target={isExternal(link.href) ? "_blank" : undefined}
+              rel={isExternal(link.href) ? "noopener noreferrer" : undefined}
               className="font-body text-sm text-text-muted hover:text-text transition-colors"
             >
               {link.label}
@@ -104,6 +116,8 @@ export function Footer({ className }: { className?: string }) {
               <a
                 key={link.label}
                 href={link.href}
+                target={isExternal(link.href) ? "_blank" : undefined}
+                rel={isExternal(link.href) ? "noopener noreferrer" : undefined}
                 aria-label={link.label}
                 className="text-text-muted hover:text-text transition-colors"
               >
@@ -115,7 +129,7 @@ export function Footer({ className }: { className?: string }) {
 
         {/* Copyright */}
         <p className="font-body text-sm text-text-muted">
-          Momentum &copy; 2026
+          Inertia &copy; 2026
         </p>
       </div>
     </footer>

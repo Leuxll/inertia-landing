@@ -1,5 +1,5 @@
 /**
- * Branded welcome email template for Momentum waitlist signups.
+ * Branded welcome email template for Inertia waitlist signups.
  *
  * Design: dark background, minimal layout, no images — feels like a
  * quiet, confident message from Co-Star. Inline styles only (email
@@ -25,7 +25,7 @@ export function getWelcomeEmailHtml(_email: string): string {
   <div style="max-width: 480px; margin: 0 auto;">
     <!-- Brand label -->
     <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #a1a1a1; margin: 0 0 32px 0;">
-      MOMENTUM
+      INERTIA
     </p>
 
     <!-- Main message -->
@@ -35,13 +35,13 @@ export function getWelcomeEmailHtml(_email: string): string {
 
     <p style="font-size: 16px; line-height: 1.6; color: #a1a1a1; margin: 0 0 32px 0;">
       Most habit trackers sell you consistency as a subscription. We think the
-      truth is simpler&mdash;and worth owning outright. When Momentum is ready,
+      truth is simpler&mdash;and worth owning outright. When Inertia is ready,
       you&rsquo;ll be the first to know.
     </p>
 
     <!-- Sign-off -->
     <p style="font-size: 14px; color: #666666; border-top: 1px solid rgba(244,244,240,0.08); padding-top: 24px; margin: 48px 0 0 0;">
-      Momentum &mdash; The Anti-Subscription Habit Tracker
+      Inertia &mdash; The Anti-Subscription Habit Tracker
     </p>
   </div>
 </body>

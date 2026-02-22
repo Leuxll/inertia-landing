@@ -6,11 +6,12 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { GeometricBullet } from "@/components/ui/geometric-bullet";
 import { fadeUp } from "@/lib/animations";
 
 export function PricingSection() {
   return (
-    <Section fullHeight className="justify-center py-24 md:py-28 lg:py-32">
+    <Section className="justify-center py-20 md:py-28 lg:py-32">
       <Container>
         <ScrollReveal variant="stagger">
           <div className="flex flex-col gap-12 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
@@ -30,7 +31,7 @@ export function PricingSection() {
                 variant="muted"
                 className="text-lg md:text-xl leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
-                Momentum is free. Not freemium. Not &ldquo;free for 7 days.&rdquo;
+                Inertia is free. Not freemium. Not &ldquo;free for 7 days.&rdquo;
                 Free. When we launch Pro, you&rsquo;ll choose: a yearly subscription
                 or one single purchase. Your call, not ours.
               </Text>
@@ -42,34 +43,74 @@ export function PricingSection() {
             </motion.div>
 
             <motion.div variants={fadeUp}>
-              <div className="bg-surface rounded-2xl border border-border p-6 md:p-8 lg:p-10">
+              <div className="gradient-border bg-surface/80 backdrop-blur-sm rounded-2xl border border-border p-6 md:p-8 lg:p-10">
                 <div className="space-y-6">
                   <div>
-                    <Text
-                      variant="small"
-                      className="uppercase tracking-[0.25em] mb-2"
-                    >
-                      Today
-                    </Text>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Text
+                        variant="small"
+                        className="uppercase tracking-[0.25em]"
+                      >
+                        At Launch
+                      </Text>
+                      <span className="font-body text-xs uppercase tracking-wider px-2.5 py-1 rounded-full border border-text/10 text-text/70">
+                        Free forever
+                      </span>
+                    </div>
                     <Heading as="h4">Free Core Experience</Heading>
-                    <Text variant="muted" className="mt-2">
-                      Habits, streaks, and the essential Momentum flow.
+                    <Text variant="muted" className="mt-2 mb-4">
+                      Habits, streaks, and the essential Inertia flow.
                     </Text>
+                    <ul className="space-y-3">
+                      {[
+                        "Unlimited habit tracking",
+                        "Streak counting & insights", 
+                        "Clean, minimal interface",
+                        "No ads, ever"
+                      ].map((feature, i) => (
+                        <li key={i} className="flex items-center gap-3">
+                          <GeometricBullet variant="circle" size="sm" />
+                          <Text variant="muted" className="text-sm">
+                            {feature}
+                          </Text>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <div className="h-px bg-border" />
+                  <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
                   <div>
-                    <Text
-                      variant="small"
-                      className="uppercase tracking-[0.25em] mb-2"
-                    >
-                      At Launch
-                    </Text>
-                    <Heading as="h4">Optional Pro</Heading>
-                    <Text variant="muted" className="mt-2">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Text
+                        variant="small"
+                        className="uppercase tracking-[0.25em]"
+                      >
+                        Coming Soon
+                      </Text>
+                      <span className="font-body text-xs uppercase tracking-wider px-2.5 py-1 rounded-full border border-text/10 text-text/70">
+                        Optional Pro
+                      </span>
+                    </div>
+                    <Heading as="h4">Advanced Features</Heading>
+                    <Text variant="muted" className="mt-2 mb-4">
                       Choose yearly or one-time. No traps, no forced upgrades.
                     </Text>
+                    <ul className="space-y-3">
+                      {[
+                        "AI Reflections",
+                        "Rest Tokens",
+                        "HealthKit Sync",
+                        "Custom themes & export"
+                      ].map((feature, i) => (
+                        <li key={i} className="flex items-center gap-3">
+                          <GeometricBullet variant="square" size="sm" />
+                          <Text variant="muted" className="text-sm">
+                            {feature}
+                          </Text>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>

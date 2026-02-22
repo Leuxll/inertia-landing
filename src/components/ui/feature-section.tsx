@@ -53,8 +53,7 @@ export function FeatureSection({
     <div ref={sectionRef}>
       <Section
         id={id}
-        fullHeight
-        className={cn("justify-center py-24 md:py-28 lg:py-32", className)}
+        className={cn("justify-center py-20 md:py-28 lg:py-32", className)}
       >
         <Container>
           <ScrollReveal variant="stagger">

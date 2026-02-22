@@ -1,12 +1,15 @@
 {
-  "name": "momentum-landing",
+  "name": "inertia-landing",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test-waitlist": "curl -X POST http://localhost:3000/api/waitlist -H 'Content-Type: application/json' -d '{\"email\":\"test@example.com\"}'",
+    "test-production": "NODE_ENV=production npm run build && npm run start"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -15,46 +15,55 @@ export function GeometricAccent({ className }: GeometricAccentProps) {
     offset: ["start start", "end start"],
   });
 
-  // Parallax: large circle drifts 60px up as user scrolls
-  const y1Raw = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  // Parallax: large orb drifts 80px up as user scrolls
+  const y1Raw = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
-  // Parallax: small circle drifts 30px up (slower = feels closer)
-  const y2Raw = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  // Parallax: small orb drifts 40px up (slower = feels closer)
+  const y2Raw = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
-  // Use static 0 when reduced-motion
+  // Fade out as user scrolls away from hero
+  const opacityRaw = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  // Use static values when reduced-motion
   const y1 = prefersReducedMotion ? 0 : y1Raw;
   const y2 = prefersReducedMotion ? 0 : y2Raw;
+  const opacity = prefersReducedMotion ? 1 : opacityRaw;
 
   return (
-    <div
+    <motion.div
       className={cn(
         "absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden",
         className
       )}
+      style={{ opacity }}
     >
-      {/* Large slowly rotating circle — ambient depth */}
+      {/* Centered but contained ambient glow — doesn't reach phone area */}
       <motion.div
-        className="w-[500px] h-[500px] md:w-[600px] md:h-[600px] rounded-full border border-text/[0.04]"
-        animate={prefersReducedMotion ? {} : { rotate: 360 }}
-        style={{ y: y1 }}
+        className="w-[600px] h-[600px] md:w-[700px] md:h-[700px] rounded-full"
+        style={{
+          y: y1,
+          background:
+            "radial-gradient(circle, rgba(244,244,240,0.03) 0%, rgba(244,244,240,0.015) 40%, transparent 70%)",
+        }}
+        animate={prefersReducedMotion ? {} : { scale: [1, 1.02, 1] }}
         transition={{
-          duration: 90,
-          ease: "linear",
+          duration: 16,
+          ease: "easeInOut",
           repeat: Infinity,
         }}
       />
 
-      {/* Smaller offset arc for layered depth */}
+      {/* Thin rotating ring — subtle geometric accent */}
       <motion.div
-        className="absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-text/[0.03]"
-        animate={prefersReducedMotion ? {} : { rotate: -360 }}
-        style={{ y: y2, translate: "10% -5%" }}
+        className="absolute w-[400px] h-[400px] md:w-[500px] md:h-[500px] rounded-full border border-text/[0.05]"
+        animate={prefersReducedMotion ? {} : { rotate: 360 }}
+        style={{ y: y1 }}
         transition={{
           duration: 120,
           ease: "linear",
           repeat: Infinity,
         }}
       />
-    </div>
+    </motion.div>
   );
 }

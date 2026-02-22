@@ -14,13 +14,14 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 interface CtaBlockProps {
   className?: string;
   compact?: boolean;
+  centered?: boolean;
 }
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function CtaBlock({ className, compact = false }: CtaBlockProps) {
+export function CtaBlock({ className, compact = false, centered = false }: CtaBlockProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -62,8 +63,8 @@ export function CtaBlock({ className, compact = false }: CtaBlockProps) {
 
   if (!isWaitlistMode) {
     return (
-      <div className={cn("flex flex-col items-center", className)}>
-        <Button href="https://apps.apple.com">Download on App Store</Button>
+      <div className={cn("flex flex-col", centered ? "items-center" : "items-start", className)}>
+        <Button href="https://apps.apple.com/app/inertia-habit-tracker/id1234567890">Download on App Store</Button>
       </div>
     );
   }
@@ -71,7 +72,8 @@ export function CtaBlock({ className, compact = false }: CtaBlockProps) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center w-full",
+        "flex flex-col w-full",
+        centered ? "items-center" : "items-start",
         compact ? "gap-3" : "gap-4",
         className
       )}
@@ -84,12 +86,12 @@ export function CtaBlock({ className, compact = false }: CtaBlockProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={smoothTransition}
-            className="flex flex-col items-center gap-2 py-4"
+            className={cn("flex flex-col gap-2 py-4", centered ? "items-center" : "items-start")}
           >
-            <Heading as="h4" className="text-center">
+            <Heading as="h4" className={centered ? "text-center" : "text-left"}>
               You&rsquo;re in.
             </Heading>
-            <Text variant="muted" className="text-center">
+            <Text variant="muted" className={centered ? "text-center" : "text-left"}>
               Check your inbox.
             </Text>
           </motion.div>
@@ -101,7 +103,8 @@ export function CtaBlock({ className, compact = false }: CtaBlockProps) {
             exit={{ opacity: 0, y: -8 }}
             transition={smoothTransition}
             className={cn(
-              "flex flex-col items-center w-full",
+              "flex flex-col w-full",
+              centered ? "items-center" : "items-start",
               compact ? "gap-3" : "gap-4"
             )}
           >

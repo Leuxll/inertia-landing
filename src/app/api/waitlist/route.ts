@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     /* ---- Send welcome email (only for new contacts) ---- */
     if (isNewContact) {
       const emailResult = await resend.emails.send({
-        from: `Momentum <${getFromEmail()}>`,
+        from: `Inertia <${getFromEmail()}>`,
         to: email,
         subject: WELCOME_EMAIL_SUBJECT,
         html: getWelcomeEmailHtml(email),

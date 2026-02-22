@@ -5,9 +5,9 @@ export function CustomizationSection() {
     <FeatureSection
       headline="Make It"
       headlineAccent="Yours."
-      description="Dark themes, custom accents, your layout — because a tool should feel like it belongs to you."
-      screenshotSrc="/screenshots/placeholder-customize.svg"
-      screenshotAlt="Momentum customization options showing theme and appearance settings"
+      description="Choose from curated templates or build from scratch. Your habits, your categories, your system — designed around how you actually live."
+      screenshotSrc="/screenshots/templates.png"
+      screenshotAlt="Inertia pattern selection showing customizable habit templates for hydration, exercise, sleep, and meditation"
       imagePosition="left"
     />
   );

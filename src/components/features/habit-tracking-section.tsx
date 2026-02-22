@@ -7,8 +7,8 @@ export function HabitTrackingSection() {
       headline="It Hurts."
       headlineAccent="It Helps."
       description="Track what matters. Skip the gamification. Just you and your streaks, beautifully laid bare."
-      screenshotSrc="/screenshots/placeholder-habits.svg"
-      screenshotAlt="Momentum habit tracking interface showing daily habits with completion status"
+      screenshotSrc="/screenshots/home.png"
+      screenshotAlt="Inertia daily habit tracker showing Exercise completed, Hydration and Sleep tracking"
       imagePosition="left"
       screenshotPriority={true}
     />

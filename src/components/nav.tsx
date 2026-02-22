@@ -6,7 +6,7 @@ import { isWaitlistMode } from "@/lib/config";
 import { smoothTransition } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
-const APP_STORE_URL = "https://apps.apple.com";
+const APP_STORE_URL = "https://apps.apple.com/app/inertia-habit-tracker/id1234567890"; // Replace with your actual App Store URL
 
 function LogoMark({ size = 32 }: { size?: number }) {
   return (
@@ -16,16 +16,43 @@ function LogoMark({ size = 32 }: { size?: number }) {
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Momentum"
+      aria-label="Inertia"
     >
-      {/* Geometric "M" monogram — two diagonal strokes meeting at center */}
-      <path
-        d="M4 28V8L16 20L28 8V28"
+      {/* Inertia logo: circle with three foundation lines below */}
+      <circle
+        cx="16"
+        cy="12"
+        r="6"
         stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeWidth="2"
         fill="none"
+      />
+      <line
+        x1="10"
+        y1="26"
+        x2="10"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="16"
+        y1="28"
+        x2="16"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <line
+        x1="22"
+        y1="26"
+        x2="22"
+        y2="22"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );

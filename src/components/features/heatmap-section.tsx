@@ -6,8 +6,8 @@ export function HeatmapSection() {
       headline="Decode the Patterns"
       headlineAccent="That Define You."
       description="Heatmaps and insights that reveal what your consistency actually looks like — no sugar-coating."
-      screenshotSrc="/screenshots/placeholder-heatmap.svg"
-      screenshotAlt="Momentum heatmap visualization showing habit consistency patterns over time"
+      screenshotSrc="/screenshots/habit-detail.png"
+      screenshotAlt="Inertia habit detail showing 13-day streak, 85% weekly consistency, and activity heatmap"
       imagePosition="right"
     />
   );

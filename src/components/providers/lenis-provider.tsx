@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { ReactLenis } from "lenis/react";
-import { LenisSnap } from "./lenis-snap";
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
   const [reduced, setReduced] = useState(() => {
@@ -29,7 +28,6 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         syncTouch: false,
       }}
     >
-      <LenisSnap />
       {children}
     </ReactLenis>
   );
