@@ -48,7 +48,7 @@ export default function Home() {
                 Just you and your discipline.
               </Text>
 
-              <CtaBlock className="mt-2" />
+              <CtaBlock className="mt-2" placement="hero" />
               <WaitlistCounter />
 
               {/* App Store availability badge */}
@@ -137,7 +137,7 @@ export default function Home() {
                 <Text variant="muted" className="max-w-md">
                   Free forever. Optional Pro later. Never a subscription.
                 </Text>
-                <CtaBlock compact centered />
+                <CtaBlock compact centered placement="bottom" />
                 <WaitlistCounter />
               </ScrollReveal>
             </Container>

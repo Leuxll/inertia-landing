@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { track } from "@vercel/analytics";
 import { isWaitlistMode } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { smoothTransition } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import {
+  getClientWaitlistAttribution,
+  getWaitlistAttributionEventData,
+} from "@/lib/waitlist-attribution";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
@@ -15,22 +20,47 @@ interface CtaBlockProps {
   className?: string;
   compact?: boolean;
   centered?: boolean;
+  placement?: "hero" | "bottom";
 }
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function CtaBlock({ className, compact = false, centered = false }: CtaBlockProps) {
+export function CtaBlock({
+  className,
+  compact = false,
+  centered = false,
+  placement = "hero",
+}: CtaBlockProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  function trackFormEvent(
+    eventName: string,
+    extra: Record<string, string | number | boolean | null> = {},
+  ) {
+    const attribution = getClientWaitlistAttribution();
+    const attributionData = getWaitlistAttributionEventData(attribution);
+
+    try {
+      track(eventName, {
+        placement,
+        ...attributionData,
+        ...extra,
+      });
+    } catch {
+      // Best effort only.
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     // Client-side validation
     if (!isValidEmail(email)) {
+      trackFormEvent("waitlist_error", { reason: "invalid_email" });
       setStatus("error");
       setErrorMessage("Please enter a valid email address.");
       return;
@@ -39,23 +69,43 @@ export function CtaBlock({ className, compact = false, centered = false }: CtaBl
     setStatus("loading");
     setErrorMessage("");
 
+    const attribution = getClientWaitlistAttribution();
+
+    trackFormEvent("waitlist_submit");
+
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, placement, attribution }),
       });
 
       if (res.ok) {
+        const data = await res.json().catch(() => null);
+
+        trackFormEvent("waitlist_success", {
+          contact_status:
+            typeof data?.contactStatus === "string" ? data.contactStatus : null,
+        });
+
         setStatus("success");
       } else {
         const data = await res.json().catch(() => null);
+        trackFormEvent("waitlist_error", {
+          reason: typeof data?.code === "string" ? data.code : "api_error",
+          status_code: res.status,
+        });
+
         setStatus("error");
         setErrorMessage(
           data?.error || "Something went wrong. Please try again."
         );
       }
     } catch {
+      trackFormEvent("waitlist_error", {
+        reason: "network_error",
+      });
+
       setStatus("error");
       setErrorMessage("Network error. Please try again.");
     }

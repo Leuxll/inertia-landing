@@ -1,16 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   getWelcomeEmailHtml,
   WELCOME_EMAIL_SUBJECT,
 } from "@/lib/email/welcome-template";
+import {
+  getWaitlistAttributionEventData,
+  sanitizeWaitlistAttribution,
+} from "@/lib/waitlist-attribution";
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers                                                                    */
 /* -------------------------------------------------------------------------- */
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const WAITLIST_EVENT_NAME = "waitlist_signup";
+const ALLOWED_PLACEMENTS = new Set(["hero", "bottom"]);
+
+type WaitlistEventValue = string | number | boolean | null;
+type WaitlistEventData = Record<string, WaitlistEventValue>;
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -34,6 +44,24 @@ function getClientIp(request: NextRequest): string {
   );
 }
 
+function sanitizePlacement(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().toLowerCase();
+  if (!ALLOWED_PLACEMENTS.has(normalized)) return null;
+  return normalized;
+}
+
+async function trackWaitlistSignup(
+  outcome: string,
+  data: WaitlistEventData,
+): Promise<void> {
+  try {
+    await track(WAITLIST_EVENT_NAME, { outcome, ...data });
+  } catch (error) {
+    console.error("Waitlist analytics track error:", error);
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*  POST /api/waitlist — signup handler                                        */
 /* -------------------------------------------------------------------------- */
@@ -45,31 +73,44 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json();
     } catch {
+      void trackWaitlistSignup("invalid_json", {
+        source: "direct",
+      });
       return NextResponse.json(
-        { error: "Invalid request body" },
+        { error: "Invalid request body", code: "invalid_json" },
         { status: 400 },
       );
     }
 
+    const payload =
+      typeof body === "object" && body !== null
+        ? (body as Record<string, unknown>)
+        : {};
+    const attribution = sanitizeWaitlistAttribution(payload.attribution);
+    const placement = sanitizePlacement(payload.placement);
+    const eventData: WaitlistEventData = {
+      ...getWaitlistAttributionEventData(attribution),
+      placement,
+    };
+
     const email =
-      typeof body === "object" &&
-      body !== null &&
-      "email" in body &&
-      typeof (body as Record<string, unknown>).email === "string"
-        ? ((body as Record<string, unknown>).email as string).trim().toLowerCase()
+      typeof payload.email === "string"
+        ? payload.email.trim().toLowerCase()
         : null;
 
     if (!email) {
+      void trackWaitlistSignup("missing_email", eventData);
       return NextResponse.json(
-        { error: "Email is required" },
+        { error: "Email is required", code: "missing_email" },
         { status: 400 },
       );
     }
 
     /* ---- Validate format ---- */
     if (!EMAIL_REGEX.test(email)) {
+      void trackWaitlistSignup("invalid_email", eventData);
       return NextResponse.json(
-        { error: "Please enter a valid email address" },
+        { error: "Please enter a valid email address", code: "invalid_email" },
         { status: 400 },
       );
     }
@@ -79,8 +120,12 @@ export async function POST(request: NextRequest) {
     const limiter = rateLimit({ key: ip, limit: 3, windowMs: 3_600_000 });
 
     if (!limiter.success) {
+      void trackWaitlistSignup("rate_limited", eventData);
       return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
+        {
+          error: "Too many requests. Please try again later.",
+          code: "rate_limited",
+        },
         { status: 429 },
       );
     }
@@ -91,8 +136,9 @@ export async function POST(request: NextRequest) {
 
     if (!resend || !audienceId) {
       console.error("Resend not configured: missing API key or audience ID");
+      void trackWaitlistSignup("resend_not_configured", eventData);
       return NextResponse.json(
-        { error: "Something went wrong. Please try again." },
+        { error: "Something went wrong. Please try again.", code: "server_error" },
         { status: 500 },
       );
     }
@@ -111,8 +157,9 @@ export async function POST(request: NextRequest) {
         isNewContact = false;
       } else {
         console.error("Resend contact creation error:", contactResult.error);
+        void trackWaitlistSignup("resend_contact_error", eventData);
         return NextResponse.json(
-          { error: "Something went wrong. Please try again." },
+          { error: "Something went wrong. Please try again.", code: "signup_failed" },
           { status: 500 },
         );
       }
@@ -133,11 +180,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ success: true });
+    void trackWaitlistSignup(
+      isNewContact ? "success_new" : "success_existing",
+      eventData,
+    );
+
+    return NextResponse.json({
+      success: true,
+      contactStatus: isNewContact ? "new" : "existing",
+    });
   } catch (error) {
     console.error("Waitlist POST error:", error);
+    void trackWaitlistSignup("unexpected_error", {
+      source: "direct",
+    });
     return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
+      { error: "Something went wrong. Please try again.", code: "server_error" },
       { status: 500 },
     );
   }
