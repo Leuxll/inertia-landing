@@ -36,6 +36,7 @@ export function CtaBlock({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [inputStartedTracked, setInputStartedTracked] = useState(false);
 
   function trackFormEvent(
     eventName: string,
@@ -167,6 +168,12 @@ export function CtaBlock({
               <input
                 type="email"
                 value={email}
+                onFocus={() => {
+                  if (!inputStartedTracked) {
+                    trackFormEvent("email_input_started");
+                    setInputStartedTracked(true);
+                  }
+                }}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (status === "error") {
@@ -180,12 +187,17 @@ export function CtaBlock({
               />
               <Button
                 type="submit"
+                onClick={() => trackFormEvent("waitlist_cta_click")}
                 disabled={status === "loading"}
                 className="w-full text-center"
               >
                 {status === "loading" ? "Joining..." : "Get Early Access"}
               </Button>
             </div>
+
+            <Text variant="small" className={cn("text-text-muted/70", centered ? "text-center" : "text-left")}>
+              Email only. No spam. Small-batch invites.
+            </Text>
 
             {status === "error" && errorMessage && (
               <Text variant="small" className="text-text-muted/80">

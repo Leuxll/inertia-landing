@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { track } from "@vercel/analytics";
 import { isWaitlistMode } from "@/lib/config";
 import { smoothTransition } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -60,11 +61,29 @@ function LogoMark({ size = 32 }: { size?: number }) {
 
 export function Nav() {
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const [trackedScroll50, setTrackedScroll50] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
       const threshold = window.innerHeight * 0.8;
       setScrolledPastHero(window.scrollY > threshold);
+
+      if (!trackedScroll50) {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollable > 0) {
+          const pct = window.scrollY / scrollable;
+          if (pct >= 0.5) {
+            try {
+              track("scroll_50", {
+                path: window.location.pathname,
+              });
+            } catch {
+              // Best effort only.
+            }
+            setTrackedScroll50(true);
+          }
+        }
+      }
     }
 
     // Check initial position (in case user refreshes mid-page)
@@ -72,10 +91,15 @@ export function Nav() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [trackedScroll50]);
 
   function handleCtaClick() {
     if (!isWaitlistMode) return; // download mode uses href
+    try {
+      track("nav_cta_click", { path: window.location.pathname });
+    } catch {
+      // Best effort only.
+    }
     document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
   }
 
