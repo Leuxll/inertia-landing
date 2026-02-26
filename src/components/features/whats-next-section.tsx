@@ -39,51 +39,53 @@ const upcomingFeatures = [
     label: "Intelligence",
     title: "AI Reflections",
     description:
-      "AI-generated pattern summaries that turn streak data into honest feedback.",
+      "AI summaries that turn streak data into honest feedback.",
     icon: BrainIcon,
   },
   {
     label: "Motivation",
     title: "Rest Tokens",
     description:
-      "Earn recovery days through consistency so rest is built into the system.",
+      "Earn recovery days through consistency so rest is built in.",
     icon: MoonIcon,
   },
   {
     label: "Integration",
     title: "HealthKit Sync",
     description:
-      "See habits beside sleep, steps, and recovery in one clear timeline.",
+      "See habits beside sleep, steps, and recovery in one timeline.",
     icon: HeartPulseIcon,
   },
 ];
 
 export function WhatsNextSection() {
   return (
-    <Section className="justify-center py-20 md:py-28 lg:py-32">
+    <Section density="standard" className="justify-center">
       <Container>
         <ScrollReveal variant="stagger">
-          <div className="flex flex-col gap-12 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+          <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 lg:items-start">
             <motion.div
               variants={fadeUp}
-              className="flex flex-col gap-6 text-center lg:text-left"
+              className="flex flex-col gap-5 text-center lg:text-left"
             >
               <Text variant="small" className="uppercase tracking-[0.3em]">
                 What&rsquo;s Next
               </Text>
 
-              <Heading as="h2">The Road Ahead</Heading>
+              <Heading as="h2" className="max-w-[14ch]">
+                What&apos;s Coming Next
+              </Heading>
 
               <Text
                 variant="muted"
-                className="max-w-lg text-lg md:text-xl mx-auto lg:mx-0"
+                className="max-w-lg text-base md:text-lg mx-auto lg:mx-0"
               >
-                We&rsquo;re building the next layer of Inertia around insight,
-                recovery, and context.
+                We&apos;re adding opt-in upgrades around insight, recovery, and
+                context without bloating the core product.
               </Text>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="grid gap-4">
+            <motion.div variants={fadeUp} className="grid gap-3">
               {upcomingFeatures.map((feature) => {
                 const Icon = feature.icon;
                 return (
@@ -92,7 +94,7 @@ export function WhatsNextSection() {
                       initial="rest"
                       whileHover="hover"
                       variants={cardHover}
-                      className="gradient-border bg-surface/80 backdrop-blur-sm rounded-2xl p-5 md:p-6 border border-border text-left"
+                      className="gradient-border bg-surface/80 backdrop-blur-sm rounded-2xl p-4 md:p-5 border border-border text-left"
                     >
                       <div className="flex items-start gap-4">
                         <div className="text-text-muted mt-0.5 flex-shrink-0">

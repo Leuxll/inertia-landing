@@ -19,10 +19,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Inertia — The Anti-Subscription Habit Tracker",
+  title: "Inertia — A Habit Tracker That Respects Your Wallet",
   description:
-    "A brutally honest, beautifully designed habit tracker that respects your wallet. Free forever. No subscriptions, no tricks.",
-  keywords: ["habit tracker", "no subscription", "free app", "habit building", "productivity", "ios", "inertia"],
+    "A beautifully designed habit tracker with a free core experience and optional Pro later. No ads. No data harvesting.",
+  keywords: ["habit tracker", "free core", "lifetime purchase", "habit building", "productivity", "ios", "inertia"],
   authors: [{ name: "Inertia Team" }],
   creator: "Inertia",
   publisher: "Inertia",
@@ -47,8 +47,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://getinertia.app",
     siteName: "Inertia",
-    title: "Inertia — The Anti-Subscription Habit Tracker",
-    description: "Track your habits without tracking your wallet. Beautifully designed. Brutally honest. One purchase, no strings.",
+    title: "Inertia — A Habit Tracker That Respects Your Wallet",
+    description: "Free core habit tracking with optional Pro later (yearly or lifetime). No ads. No data harvesting.",
     images: [
       {
         url: "/og-image.png", // You'll need to create this 1200x630 image
@@ -64,8 +64,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@getinertiaapp", // Replace with your Twitter handle
     creator: "@getinertiaapp", // Replace with your Twitter handle  
-    title: "Inertia — The Anti-Subscription Habit Tracker",
-    description: "Track your habits without tracking your wallet. Free forever.",
+    title: "Inertia — A Habit Tracker That Respects Your Wallet",
+    description: "Free core habit tracking. Optional Pro later. No ads. No data harvesting.",
     images: ["/og-image.png"],
   },
   

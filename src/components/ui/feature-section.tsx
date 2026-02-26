@@ -43,8 +43,8 @@ export function FeatureSection({
     offset: ["start end", "end start"],
   });
 
-  // Parallax: phone frame drifts 20px up as section scrolls through viewport
-  const phoneYRaw = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  // Keep parallax subtle so sections feel stable and readable.
+  const phoneYRaw = useTransform(scrollYProgress, [0, 1], [10, -10]);
 
   // Use static 0 when reduced-motion
   const phoneY = prefersReducedMotion ? 0 : phoneYRaw;
@@ -53,11 +53,12 @@ export function FeatureSection({
     <div ref={sectionRef}>
       <Section
         id={id}
-        className={cn("justify-center py-20 md:py-28 lg:py-32", className)}
+        density="airy"
+        className={cn("justify-center", className)}
       >
         <Container>
           <ScrollReveal variant="stagger">
-            <div className="flex flex-col gap-12 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+            <div className="flex flex-col gap-10 lg:grid lg:grid-cols-2 lg:gap-14 lg:items-center">
               {/* Phone frame column */}
               <motion.div
                 variants={fadeUp}
@@ -78,7 +79,7 @@ export function FeatureSection({
               <motion.div
                 variants={fadeUp}
                 className={cn(
-                  "flex flex-col gap-6 order-1 lg:order-none",
+                  "flex flex-col gap-5 order-1 lg:order-none",
                   imagePosition === "right" && "lg:order-1",
                 )}
               >

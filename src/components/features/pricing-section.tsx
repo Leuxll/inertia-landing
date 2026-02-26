@@ -11,7 +11,7 @@ import { fadeUp } from "@/lib/animations";
 
 export function PricingSection() {
   return (
-    <Section className="justify-center py-20 md:py-28 lg:py-32">
+    <Section density="airy" className="justify-center">
       <Container>
         <ScrollReveal variant="stagger">
           <div className="flex flex-col gap-12 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
@@ -24,21 +24,20 @@ export function PricingSection() {
               </Text>
 
               <Heading as="h2">
-                No Subscriptions.{"\n"}No Trials. No Tricks.
+                Fair Pricing.{"\n"}No Forced Subscription.
               </Heading>
 
               <Text
                 variant="muted"
                 className="text-lg md:text-xl leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
-                Inertia is free. Not freemium. Not &ldquo;free for 7 days.&rdquo;
-                Free. When we launch Pro, you&rsquo;ll choose: a yearly subscription
-                or one single purchase. Your call, not ours.
+                Start with a free core experience. If you want more later,
+                choose optional Pro with yearly or lifetime pricing.
               </Text>
 
               <Text variant="muted" className="max-w-lg mx-auto lg:mx-0">
-                Pro unlocks things like deeper insights and custom themes, but
-                the core experience stays yours forever.
+                The core stays useful on its own. Pro adds deeper insights and
+                extras, not basic paywalls.
               </Text>
             </motion.div>
 
@@ -59,14 +58,15 @@ export function PricingSection() {
                     </div>
                     <Heading as="h4">Free Core Experience</Heading>
                     <Text variant="muted" className="mt-2 mb-4">
-                      Habits, streaks, and the essential Inertia flow.
+                      Habits, streaks, and the essential Inertia flow. No ads.
+                      No data harvesting.
                     </Text>
                     <ul className="space-y-3">
                       {[
                         "Unlimited habit tracking",
-                        "Streak counting & insights", 
+                        "Streak counting & consistency insights",
                         "Clean, minimal interface",
-                        "No ads, ever"
+                        "No ads, ever",
                       ].map((feature, i) => (
                         <li key={i} className="flex items-center gap-3">
                           <GeometricBullet variant="circle" size="sm" />
@@ -94,7 +94,7 @@ export function PricingSection() {
                     </div>
                     <Heading as="h4">Advanced Features</Heading>
                     <Text variant="muted" className="mt-2 mb-4">
-                      Choose yearly or one-time. No traps, no forced upgrades.
+                      Choose yearly or lifetime. Upgrades stay optional.
                     </Text>
                     <ul className="space-y-3">
                       {[
