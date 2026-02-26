@@ -22,6 +22,16 @@ const ALLOWED_PLACEMENTS = new Set(["hero", "bottom"]);
 type WaitlistEventValue = string | number | boolean | null;
 type WaitlistEventData = Record<string, WaitlistEventValue>;
 
+const WAITLIST_COUNT_TTL_MS = 10 * 60 * 1000;
+
+let waitlistCountCache:
+  | {
+      count: number;
+      updatedAt: number;
+    }
+  | null = null;
+let waitlistCountInflight: Promise<number> | null = null;
+
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
   if (!key || key === "re_your_api_key_here") return null;
@@ -36,6 +46,137 @@ function getAudienceId(): string | null {
 
 function getFromEmail(): string {
   return process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
+}
+
+function extractAudienceContactCount(data: unknown): number | null {
+  if (!data || typeof data !== "object") return null;
+  const record = data as Record<string, unknown>;
+
+  const directCandidates = [
+    record.count,
+    record.contacts_count,
+    record.contact_count,
+    record.total_contacts,
+    record.total,
+  ];
+
+  for (const candidate of directCandidates) {
+    if (typeof candidate === "number" && Number.isFinite(candidate)) {
+      return candidate;
+    }
+  }
+
+  // Some SDK responses nest the payload under `data`.
+  if (record.data && record.data !== data) {
+    return extractAudienceContactCount(record.data);
+  }
+
+  return null;
+}
+
+async function getUniqueWaitlistCountFromResend(
+  resend: Resend,
+  audienceId: string,
+): Promise<number> {
+  try {
+    const audience = await resend.audiences.get(audienceId);
+    const audienceCount = extractAudienceContactCount(audience.data);
+    if (typeof audienceCount === "number") return audienceCount;
+  } catch (error) {
+    console.error("Resend audience count fallback to pagination:", error);
+  }
+
+  const seen = new Set<string>();
+  let after: string | undefined;
+  let hasMore = true;
+  let pageGuard = 0;
+
+  while (hasMore && pageGuard < 50) {
+    pageGuard += 1;
+    const page = await resend.contacts.list({
+      audienceId,
+      limit: 100,
+      ...(after ? { after } : {}),
+    });
+
+    if (page.error) {
+      throw page.error;
+    }
+
+    const rows = page.data?.data ?? [];
+    for (const row of rows) {
+      const key =
+        typeof row.email === "string" && row.email.length > 0
+          ? row.email.toLowerCase()
+          : row.id;
+      if (key) seen.add(key);
+    }
+
+    hasMore = page.data?.has_more === true;
+    const last = rows[rows.length - 1];
+    after = typeof last?.id === "string" ? last.id : undefined;
+
+    // Avoid infinite loop if Resend returns has_more without a usable cursor.
+    if (hasMore && !after) break;
+  }
+
+  return seen.size;
+}
+
+function getCachedWaitlistCount(): number | null {
+  if (!waitlistCountCache) return null;
+  const age = Date.now() - waitlistCountCache.updatedAt;
+  if (age > WAITLIST_COUNT_TTL_MS) return null;
+  return waitlistCountCache.count;
+}
+
+function setCachedWaitlistCount(count: number): void {
+  waitlistCountCache = {
+    count,
+    updatedAt: Date.now(),
+  };
+}
+
+function bumpCachedWaitlistCount(): void {
+  if (!waitlistCountCache) return;
+  waitlistCountCache = {
+    count: waitlistCountCache.count + 1,
+    updatedAt: Date.now(),
+  };
+}
+
+async function getWaitlistCountWithCache(
+  resend: Resend,
+  audienceId: string,
+): Promise<number> {
+  const cached = getCachedWaitlistCount();
+  if (cached !== null) return cached;
+
+  if (waitlistCountInflight) {
+    try {
+      return await waitlistCountInflight;
+    } catch {
+      const stale = waitlistCountCache?.count ?? null;
+      if (stale !== null) return stale;
+      throw new Error("waitlist_count_refresh_failed");
+    }
+  }
+
+  waitlistCountInflight = (async () => {
+    const fresh = await getUniqueWaitlistCountFromResend(resend, audienceId);
+    setCachedWaitlistCount(fresh);
+    return fresh;
+  })();
+
+  try {
+    return await waitlistCountInflight;
+  } catch (error) {
+    const stale = waitlistCountCache?.count ?? null;
+    if (stale !== null) return stale;
+    throw error;
+  } finally {
+    waitlistCountInflight = null;
+  }
 }
 
 function getClientIp(request: NextRequest): string {
@@ -91,6 +232,19 @@ export async function POST(request: NextRequest) {
     const eventData: WaitlistEventData = {
       ...getWaitlistAttributionEventData(attribution),
       placement,
+    };
+    const contactProperties = {
+      source: typeof eventData.source === "string" ? eventData.source : null,
+      utm_source: attribution.utmSource,
+      utm_medium: attribution.utmMedium,
+      utm_campaign: attribution.utmCampaign,
+      utm_term: attribution.utmTerm,
+      utm_content: attribution.utmContent,
+      referrer: attribution.referrer,
+      referrer_host:
+        typeof eventData.referrer_host === "string" ? eventData.referrer_host : null,
+      landing_path: attribution.landingPath,
+      signup_placement: placement,
     };
 
     const email =
@@ -148,6 +302,7 @@ export async function POST(request: NextRequest) {
     const contactResult = await resend.contacts.create({
       email,
       audienceId,
+      properties: contactProperties,
     });
 
     if (contactResult.error) {
@@ -167,6 +322,8 @@ export async function POST(request: NextRequest) {
 
     /* ---- Send welcome email (only for new contacts) ---- */
     if (isNewContact) {
+      bumpCachedWaitlistCount();
+
       const emailResult = await resend.emails.send({
         from: `Inertia <${getFromEmail()}>`,
         to: email,
@@ -214,14 +371,13 @@ export async function GET() {
       return NextResponse.json({ count: 0 });
     }
 
-    const result = await resend.contacts.list({ audienceId });
-    const count = result.data?.data?.length ?? 0;
+    const count = await getWaitlistCountWithCache(resend, audienceId);
 
     return NextResponse.json(
       { count },
       {
         headers: {
-          "Cache-Control": "s-maxage=60, stale-while-revalidate=30",
+          "Cache-Control": "s-maxage=600, stale-while-revalidate=300",
         },
       },
     );
