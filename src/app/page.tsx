@@ -63,27 +63,35 @@ export default function Home() {
 
         <Container size="hero" className="relative z-10">
           <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:gap-12">
-            <ScrollReveal className="flex flex-col items-start text-left">
-              <Text variant="small" className="uppercase tracking-[0.3em]">
+            <div className="flex flex-col items-start text-left">
+              <Text
+                variant="small"
+                className="hero-polish-float uppercase tracking-[0.3em]"
+                style={{ ["--hero-delay" as string]: "0.15s" }}
+              >
                 Inertia
               </Text>
 
               <Heading
                 as="h1"
-                className="mt-4 max-w-[13ch] text-4xl leading-[0.93] md:text-6xl lg:text-7xl"
+                className="hero-polish-title mt-4 max-w-[13ch] text-4xl leading-[0.93] md:text-6xl lg:text-7xl"
               >
                 A Habit Tracker for Builders Who Hate Subscription Bloat
               </Heading>
 
               <Text
                 variant="muted"
-                className="mt-5 max-w-[52ch] text-base md:text-lg"
+                className="hero-polish-float mt-5 max-w-[52ch] text-base md:text-lg"
+                style={{ ["--hero-delay" as string]: "0.35s" }}
               >
                 Free core. Optional Pro later with yearly or lifetime pricing.
                 No ads. No data harvesting. No forced subscription.
               </Text>
 
-              <div className="mt-5 w-full max-w-xl rounded-2xl border border-border bg-surface/65 px-4 py-3 backdrop-blur-sm">
+              <div
+                className="hero-polish-note mt-5 w-full max-w-xl rounded-2xl border border-border bg-surface/65 px-4 py-3 backdrop-blur-sm"
+                style={{ ["--hero-delay" as string]: "0.55s" }}
+              >
                 <Text
                   variant="small"
                   className="uppercase tracking-[0.18em] text-text-muted/70"
@@ -96,12 +104,18 @@ export default function Home() {
                 </Text>
               </div>
 
-              <div className="mt-6 flex w-full max-w-md flex-col items-start gap-3">
+              <div
+                className="hero-polish-cta-zone mt-6 flex w-full max-w-md flex-col items-start gap-3"
+                style={{ ["--hero-delay" as string]: "0.75s" }}
+              >
                 <WaitlistCounter placement="hero" tone="chip" minCount={10} />
                 <CtaBlock placement="hero" />
               </div>
 
-              <div className="mt-2 flex items-center gap-2">
+              <div
+                className="hero-polish-float mt-2 flex items-center gap-2"
+                style={{ ["--hero-delay" as string]: "0.95s" }}
+              >
                 <svg
                   width="16"
                   height="16"
@@ -118,9 +132,9 @@ export default function Home() {
                   Coming to iOS
                 </Text>
               </div>
-            </ScrollReveal>
+            </div>
 
-            <ScrollReveal className="flex items-center justify-center lg:justify-end" delay={0.15}>
+            <div className="flex items-center justify-center lg:justify-end">
               <div className="relative flex w-full max-w-[420px] flex-col items-center gap-4 lg:max-w-[460px]">
                 <HeroPhone
                   src="/screenshots/insights.png"
@@ -129,12 +143,13 @@ export default function Home() {
                 />
                 <Text
                   variant="small"
-                  className="max-w-sm text-center uppercase tracking-[0.14em] text-text-muted/70"
+                  className="hero-polish-float max-w-sm text-center uppercase tracking-[0.14em] text-text-muted/70"
+                  style={{ ["--hero-delay" as string]: "0.9s" }}
                 >
                   Local-first • Free core • Optional yearly or lifetime Pro
                 </Text>
               </div>
-            </ScrollReveal>
+            </div>
           </div>
         </Container>
 

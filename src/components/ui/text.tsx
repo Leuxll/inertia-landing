@@ -1,11 +1,13 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import type { CSSProperties } from "react";
 
 interface TextProps {
   children: ReactNode;
   variant?: "default" | "muted" | "small";
   className?: string;
   as?: "p" | "span" | "div";
+  style?: CSSProperties;
 }
 
 const variantMap = {
@@ -19,9 +21,10 @@ export function Text({
   variant = "default",
   className,
   as: Tag = "p",
+  style,
 }: TextProps) {
   return (
-    <Tag className={cn("font-body", variantMap[variant], className)}>
+    <Tag className={cn("font-body", variantMap[variant], className)} style={style}>
       {children}
     </Tag>
   );

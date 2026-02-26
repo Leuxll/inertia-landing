@@ -189,7 +189,10 @@ export function CtaBlock({
                 type="submit"
                 onClick={() => trackFormEvent("waitlist_cta_click")}
                 disabled={status === "loading"}
-                className="w-full text-center"
+                className={cn(
+                  "w-full text-center",
+                  placement === "hero" && "cta-polish-button"
+                )}
               >
                 {status === "loading" ? "Joining..." : "Get Early Access"}
               </Button>

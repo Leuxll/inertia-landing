@@ -73,3 +73,87 @@ body::before {
   mask-composite: exclude;
   pointer-events: none;
 }
+
+@keyframes heroGlowPulse {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(244, 244, 240, 0);
+  }
+  50% {
+    text-shadow: 0 0 24px rgba(244, 244, 240, 0.06);
+  }
+}
+
+@keyframes heroDriftVisible {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes heroPanelGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(244, 244, 240, 0);
+    border-color: rgba(244, 244, 240, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(244, 244, 240, 0.035);
+    border-color: rgba(244, 244, 240, 0.14);
+  }
+}
+
+@keyframes ctaSoftPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+  }
+}
+
+.hero-polish-title {
+  animation: heroGlowPulse 7s ease-in-out infinite;
+}
+
+.hero-polish-float {
+  animation: heroDriftVisible 6s ease-in-out infinite;
+  animation-delay: var(--hero-delay, 0s);
+  will-change: transform;
+}
+
+.hero-polish-note {
+  animation:
+    heroDriftVisible 7s ease-in-out infinite,
+    heroPanelGlow 8s ease-in-out infinite;
+  animation-delay: var(--hero-delay, 0s), var(--hero-delay, 0s);
+  will-change: transform, box-shadow;
+}
+
+.hero-polish-cta-zone {
+  animation: heroDriftVisible 7.5s ease-in-out infinite;
+  animation-delay: var(--hero-delay, 0s);
+  will-change: transform;
+}
+
+.cta-polish-button {
+  animation: ctaSoftPulse 4.8s ease-in-out infinite;
+  animation-delay: 0.6s;
+  will-change: transform, box-shadow;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-polish-title,
+  .hero-polish-float,
+  .hero-polish-note,
+  .hero-polish-cta-zone,
+  .cta-polish-button {
+    animation: none !important;
+  }
+}

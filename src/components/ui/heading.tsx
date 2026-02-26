@@ -1,11 +1,13 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import type { CSSProperties } from "react";
 
 interface HeadingProps {
   children: ReactNode;
   as?: "h1" | "h2" | "h3" | "h4";
   className?: string;
   accent?: boolean;
+  style?: CSSProperties;
 }
 
 const sizeMap = {
@@ -20,6 +22,7 @@ export function Heading({
   as: Tag = "h2",
   className,
   accent,
+  style,
 }: HeadingProps) {
   return (
     <Tag
@@ -29,6 +32,7 @@ export function Heading({
         accent && "italic",
         className,
       )}
+      style={style}
     >
       {children}
     </Tag>
