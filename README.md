@@ -20,6 +20,39 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Pre-Deploy Guard (Waitlist Smoke Test)
+
+Run this before deploying to verify real waitlist signup works end-to-end:
+
+```bash
+pnpm deploy:guard
+```
+
+Requirements:
+- `RESEND_API_KEY`
+- `RESEND_AUDIENCE_ID`
+- `WAITLIST_SMOKE_EMAIL` (a stable test email; returns `new` first run, then `existing`)
+
+The command builds the app, starts it locally, checks `/api/health`, then posts to `/api/waitlist`. It fails fast if signup is broken.
+
+## GitHub Actions Deploy Gate
+
+This repo includes `/Users/yuefunglee/Documents/inertia-landing/.github/workflows/deploy-guard.yml` with:
+- `Quality Checks` (type-check + build)
+- `Waitlist Smoke` (real signup smoke test against your configured Resend audience)
+
+Required repository secrets:
+- `RESEND_API_KEY`
+- `RESEND_AUDIENCE_ID`
+- `WAITLIST_SMOKE_EMAIL`
+
+Recommended repo settings:
+1. Enable branch protection on `main`
+2. Require status checks:
+   - `Quality Checks`
+   - `Waitlist Smoke`
+3. Disable direct pushes to `main` (PR-only merges)
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

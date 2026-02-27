@@ -1,0 +1,81 @@
+name: Deploy Guard
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Build
+        run: pnpm build
+
+  waitlist-smoke:
+    name: Waitlist Smoke
+    runs-on: ubuntu-latest
+    needs: quality
+    # Skip fork PRs because repository secrets are unavailable there.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify smoke secrets
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          WAITLIST_SMOKE_EMAIL: ${{ secrets.WAITLIST_SMOKE_EMAIL }}
+        run: |
+          test -n "$RESEND_API_KEY" || (echo "Missing RESEND_API_KEY secret" && exit 1)
+          test -n "$RESEND_AUDIENCE_ID" || (echo "Missing RESEND_AUDIENCE_ID secret" && exit 1)
+          test -n "$WAITLIST_SMOKE_EMAIL" || (echo "Missing WAITLIST_SMOKE_EMAIL secret" && exit 1)
+
+      - name: Run deploy guard (build + waitlist smoke)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          WAITLIST_SMOKE_EMAIL: ${{ secrets.WAITLIST_SMOKE_EMAIL }}
+        run: pnpm deploy:guard
