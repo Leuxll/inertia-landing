@@ -194,7 +194,10 @@ function sanitizePlacement(value: unknown): string | null {
 
 function isMissingPropertyError(message: string | undefined): boolean {
   const msg = message?.toLowerCase() ?? "";
-  return msg.includes("property") && msg.includes("do not exist");
+  return (
+    (msg.includes("property") || msg.includes("properties")) &&
+    msg.includes("do not exist")
+  );
 }
 
 async function trackWaitlistSignup(
