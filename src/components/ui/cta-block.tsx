@@ -143,7 +143,7 @@ export function CtaBlock({
               You&rsquo;re in.
             </Heading>
             <Text variant="muted" className={centered ? "text-center" : "text-left"}>
-              Check your inbox.
+              Check your inbox, spam, and promotions.
             </Text>
           </motion.div>
         ) : (
