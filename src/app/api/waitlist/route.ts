@@ -192,6 +192,11 @@ function sanitizePlacement(value: unknown): string | null {
   return normalized;
 }
 
+function isMissingPropertyError(message: string | undefined): boolean {
+  const msg = message?.toLowerCase() ?? "";
+  return msg.includes("property") && msg.includes("do not exist");
+}
+
 async function trackWaitlistSignup(
   outcome: string,
   data: WaitlistEventData,
@@ -299,11 +304,26 @@ export async function POST(request: NextRequest) {
 
     let isNewContact = true;
 
-    const contactResult = await resend.contacts.create({
+    const filteredProperties = Object.fromEntries(
+      Object.entries(contactProperties).filter(([, value]) => value !== null && value !== ""),
+    ) as Record<string, string>;
+
+    let contactResult = await resend.contacts.create({
       email,
       audienceId,
-      properties: contactProperties,
+      ...(Object.keys(filteredProperties).length > 0
+        ? { properties: filteredProperties }
+        : {}),
     });
+
+    // Resend can reject unknown contact properties if they are not pre-defined.
+    // Fallback to a plain contact create so waitlist signup still succeeds.
+    if (contactResult.error && isMissingPropertyError(contactResult.error.message)) {
+      contactResult = await resend.contacts.create({
+        email,
+        audienceId,
+      });
+    }
 
     if (contactResult.error) {
       // Treat "already exists" as success — user is already signed up
