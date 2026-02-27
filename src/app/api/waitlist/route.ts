@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
 import { rateLimit } from "@/lib/rate-limit";
@@ -22,6 +23,14 @@ const ALLOWED_PLACEMENTS = new Set(["hero", "bottom"]);
 const WAITLIST_COUNT_TTL_MS = 10 * 60 * 1000;
 const WAITLIST_COUNT_PAGE_LIMIT = 50;
 const WAITLIST_COUNT_PAGE_SIZE = 100;
+const WAITLIST_EMAIL_RATE_LIMIT = {
+  limit: 3,
+  windowMs: 60 * 60 * 1000,
+};
+const WAITLIST_GLOBAL_RATE_LIMIT = {
+  limit: 500,
+  windowMs: 10 * 60 * 1000,
+};
 
 type WaitlistEventValue = string | number | boolean | null;
 type WaitlistEventData = Record<string, WaitlistEventValue>;
@@ -69,10 +78,8 @@ function sanitizePlacement(value: unknown): string | null {
   return normalized;
 }
 
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
-  );
+function getHashedRateLimitKey(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
 }
 
 function isRateLimitedResendError(error: unknown): boolean {
@@ -87,14 +94,6 @@ function isRateLimitedResendError(error: unknown): boolean {
     name.includes("rate_limit") ||
     message.includes("too many requests")
   );
-}
-
-function isNotFoundResendError(error: unknown): boolean {
-  if (!error || typeof error !== "object") return false;
-  const record = error as Record<string, unknown>;
-  const message = String(record.message ?? "").toLowerCase();
-  const statusCode = Number(record.statusCode ?? 0);
-  return statusCode === 404 || message.includes("not found");
 }
 
 function getRateLimitBackoffMs(attempt: number): number {
@@ -367,11 +366,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /* ---- Rate limit by IP ---- */
-    const ip = getClientIp(request);
-    const limiter = rateLimit({ key: ip, limit: 3, windowMs: 3_600_000 });
+    /* ---- Rate limit by email + global traffic ---- */
+    const emailLimiter = await rateLimit({
+      key: `waitlist:signup:email:${getHashedRateLimitKey(email)}`,
+      ...WAITLIST_EMAIL_RATE_LIMIT,
+    });
+    if (!emailLimiter.success) {
+      if (emailLimiter.reason === "unavailable") {
+        void trackWaitlistSignup("rate_limit_unavailable", eventData);
+        return NextResponse.json(
+          { error: "Something went wrong. Please try again.", code: "server_error" },
+          { status: 503 },
+        );
+      }
 
-    if (!limiter.success) {
+      void trackWaitlistSignup("rate_limited", eventData);
+      return NextResponse.json(
+        {
+          error: "Too many requests. Please try again later.",
+          code: "rate_limited",
+        },
+        { status: 429 },
+      );
+    }
+
+    const globalLimiter = await rateLimit({
+      key: "waitlist:signup:global",
+      ...WAITLIST_GLOBAL_RATE_LIMIT,
+    });
+    if (!globalLimiter.success) {
+      if (globalLimiter.reason === "unavailable") {
+        void trackWaitlistSignup("rate_limit_unavailable", eventData);
+        return NextResponse.json(
+          { error: "Something went wrong. Please try again.", code: "server_error" },
+          { status: 503 },
+        );
+      }
+
       void trackWaitlistSignup("rate_limited", eventData);
       return NextResponse.json(
         {
@@ -398,48 +429,28 @@ export async function POST(request: NextRequest) {
     let audienceSynced = false;
     let isNewSignup = true;
 
-    const existingContact = await retryResendRateLimitedCall(
-      "Resend contact lookup",
+    const contactResult = await retryResendRateLimitedCall(
+      "Resend contact upsert",
       () =>
-        resend.contacts.get({
-          audienceId,
+        resend.contacts.create({
           email,
+          audienceId,
         }),
     );
 
-    if (existingContact.error) {
-      if (!isNotFoundResendError(existingContact.error)) {
-        console.error("Contact lookup error (continuing):", existingContact.error);
+    if (contactResult.error) {
+      const msg = String(contactResult.error.message ?? "").toLowerCase();
+      const duplicate =
+        msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
+
+      if (duplicate) {
+        audienceSynced = true;
+        isNewSignup = false;
+      } else {
+        console.error("Contact upsert error (continuing to send email):", contactResult.error);
       }
     } else {
       audienceSynced = true;
-      isNewSignup = false;
-    }
-
-    if (isNewSignup) {
-      const contactResult = await retryResendRateLimitedCall(
-        "Resend contact upsert",
-        () =>
-          resend.contacts.create({
-            email,
-            audienceId,
-          }),
-      );
-
-      if (contactResult.error) {
-        const msg = String(contactResult.error.message ?? "").toLowerCase();
-        const duplicate =
-          msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
-
-        if (duplicate) {
-          audienceSynced = true;
-          isNewSignup = false;
-        } else {
-          console.error("Contact upsert error (continuing to send email):", contactResult.error);
-        }
-      } else {
-        audienceSynced = true;
-      }
     }
 
     if (isNewSignup) {
@@ -472,15 +483,14 @@ export async function POST(request: NextRequest) {
 
     invalidateCachedWaitlistCount();
 
-    void trackWaitlistSignup(isNewSignup ? "success_new" : "success_existing", {
+    void trackWaitlistSignup("success", {
       ...eventData,
       audience_synced: audienceSynced,
+      was_new_signup: isNewSignup,
     });
 
     return NextResponse.json({
       success: true,
-      contactStatus: isNewSignup ? "new" : "existing",
-      audienceSynced,
     });
   } catch (error) {
     console.error("Waitlist POST error:", error);

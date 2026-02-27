@@ -82,12 +82,8 @@ export function CtaBlock({
       });
 
       if (res.ok) {
-        const data = await res.json().catch(() => null);
-
-        trackFormEvent("waitlist_success", {
-          contact_status:
-            typeof data?.contactStatus === "string" ? data.contactStatus : null,
-        });
+        await res.json().catch(() => null);
+        trackFormEvent("waitlist_success");
 
         setStatus("success");
       } else {

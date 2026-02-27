@@ -22,6 +22,16 @@ if (
   process.exit(1);
 }
 
+if (
+  !process.env.UPSTASH_REDIS_REST_URL ||
+  !process.env.UPSTASH_REDIS_REST_TOKEN
+) {
+  console.error(
+    "Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN. Production smoke test requires distributed rate limiting config.",
+  );
+  process.exit(1);
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -69,13 +79,7 @@ async function runSmoke() {
     throw new Error(`Signup smoke returned unexpected payload: ${JSON.stringify(payload)}`);
   }
 
-  if (!["new", "existing", "sent"].includes(payload.contactStatus)) {
-    throw new Error(
-      `Signup smoke returned invalid contactStatus: ${JSON.stringify(payload)}`,
-    );
-  }
-
-  console.log(`Waitlist smoke passed (${payload.contactStatus}) for ${smokeEmail}`);
+  console.log(`Waitlist smoke passed for ${smokeEmail}`);
 }
 
 async function main() {

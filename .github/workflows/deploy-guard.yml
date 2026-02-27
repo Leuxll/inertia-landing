@@ -69,11 +69,15 @@ jobs:
           RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
           RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL }}
           WAITLIST_SMOKE_EMAIL: ${{ secrets.WAITLIST_SMOKE_EMAIL }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
         run: |
           test -n "$RESEND_API_KEY" || (echo "Missing RESEND_API_KEY secret" && exit 1)
           test -n "$RESEND_AUDIENCE_ID" || (echo "Missing RESEND_AUDIENCE_ID secret" && exit 1)
           test -n "$RESEND_FROM_EMAIL" || (echo "Missing RESEND_FROM_EMAIL secret" && exit 1)
           test -n "$WAITLIST_SMOKE_EMAIL" || (echo "Missing WAITLIST_SMOKE_EMAIL secret" && exit 1)
+          test -n "$UPSTASH_REDIS_REST_URL" || (echo "Missing UPSTASH_REDIS_REST_URL secret" && exit 1)
+          test -n "$UPSTASH_REDIS_REST_TOKEN" || (echo "Missing UPSTASH_REDIS_REST_TOKEN secret" && exit 1)
 
       - name: Run deploy guard (build + waitlist smoke)
         env:
@@ -81,4 +85,6 @@ jobs:
           RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
           RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL }}
           WAITLIST_SMOKE_EMAIL: ${{ secrets.WAITLIST_SMOKE_EMAIL }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
         run: pnpm deploy:guard

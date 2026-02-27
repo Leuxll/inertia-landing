@@ -31,9 +31,12 @@ pnpm deploy:guard
 Requirements:
 - `RESEND_API_KEY`
 - `RESEND_AUDIENCE_ID`
-- `WAITLIST_SMOKE_EMAIL` (a stable test email; returns `new` first run, then `existing`)
+- `RESEND_FROM_EMAIL`
+- `WAITLIST_SMOKE_EMAIL` (a stable test email)
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
 
-The command builds the app, starts it locally, checks `/api/health`, then posts to `/api/waitlist`. It fails fast if signup is broken.
+The command builds the app, starts it locally, then posts to `/api/waitlist`. It fails fast if signup is broken.
 
 ## GitHub Actions Deploy Gate
 
@@ -44,7 +47,10 @@ This repo includes `/Users/yuefunglee/Documents/inertia-landing/.github/workflow
 Required repository secrets:
 - `RESEND_API_KEY`
 - `RESEND_AUDIENCE_ID`
+- `RESEND_FROM_EMAIL`
 - `WAITLIST_SMOKE_EMAIL`
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
 
 Recommended repo settings:
 1. Enable branch protection on `main`
@@ -52,6 +58,12 @@ Recommended repo settings:
    - `Quality Checks`
    - `Waitlist Smoke`
 3. Disable direct pushes to `main` (PR-only merges)
+
+## Security Configuration
+
+For production deployments:
+- Configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` for distributed API rate limiting.
+- Set `HEALTHCHECK_TOKEN` and include it as `x-healthcheck-token` when calling `/api/health`.
 
 ## Learn More
 
