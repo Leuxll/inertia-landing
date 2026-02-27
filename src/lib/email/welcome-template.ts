@@ -7,12 +7,13 @@
  */
 
 export const WELCOME_EMAIL_SUBJECT = "You're in.";
+const INERTIA_URL = "https://getinertia.app";
 
 /**
  * Returns the full HTML string for the welcome email.
  * Uses inline styles exclusively for maximum email client compatibility.
  */
-export function getWelcomeEmailHtml(_email: string): string {
+export function getWelcomeEmailHtml(): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +40,15 @@ export function getWelcomeEmailHtml(_email: string): string {
       you&rsquo;ll be the first to know.
     </p>
 
+    <p style="font-size: 14px; line-height: 1.6; color: #8a8a8a; margin: 0 0 24px 0;">
+      If you don&rsquo;t see future updates, check your Spam or Promotions tab and
+      move this email to your primary inbox.
+    </p>
+
+    <p style="font-size: 14px; line-height: 1.6; color: #9a9a9a; margin: 0;">
+      ${INERTIA_URL}
+    </p>
+
     <!-- Sign-off -->
     <p style="font-size: 14px; color: #666666; border-top: 1px solid rgba(244,244,240,0.08); padding-top: 24px; margin: 48px 0 0 0;">
       Inertia &mdash; The Anti-Subscription Habit Tracker
@@ -46,4 +56,22 @@ export function getWelcomeEmailHtml(_email: string): string {
   </div>
 </body>
 </html>`;
+}
+
+export function getWelcomeEmailText(): string {
+  return [
+    "INERTIA",
+    "",
+    "You're on the list.",
+    "",
+    "Most habit trackers sell you consistency as a subscription.",
+    "We think the truth is simpler and worth owning outright.",
+    "When Inertia is ready, you'll be the first to know.",
+    "",
+    "If you don't see future updates, check Spam or Promotions and move this email to your primary inbox.",
+    "",
+    INERTIA_URL,
+    "",
+    "Inertia - The Anti-Subscription Habit Tracker",
+  ].join("\n");
 }

@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   getWelcomeEmailHtml,
+  getWelcomeEmailText,
   WELCOME_EMAIL_SUBJECT,
 } from "@/lib/email/welcome-template";
 import {
@@ -53,6 +54,10 @@ function getFromEmail(): string {
   return process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 }
 
+function getReplyToEmail(): string {
+  return process.env.RESEND_REPLY_TO_EMAIL ?? process.env.RESEND_FROM_EMAIL ?? "hello@getinertia.app";
+}
+
 function normalizeEmail(value: string): string {
   return value.trim().toLowerCase();
 }
@@ -82,6 +87,14 @@ function isRateLimitedResendError(error: unknown): boolean {
     name.includes("rate_limit") ||
     message.includes("too many requests")
   );
+}
+
+function isNotFoundResendError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const record = error as Record<string, unknown>;
+  const message = String(record.message ?? "").toLowerCase();
+  const statusCode = Number(record.statusCode ?? 0);
+  return statusCode === 404 || message.includes("not found");
 }
 
 function getRateLimitBackoffMs(attempt: number): number {
@@ -383,60 +396,90 @@ export async function POST(request: NextRequest) {
     }
 
     let audienceSynced = false;
+    let isNewSignup = true;
 
-    const contactResult = await retryResendRateLimitedCall(
-      "Resend contact upsert",
+    const existingContact = await retryResendRateLimitedCall(
+      "Resend contact lookup",
       () =>
-        resend.contacts.create({
-          email,
+        resend.contacts.get({
           audienceId,
+          email,
         }),
     );
 
-    if (contactResult.error) {
-      const msg = String(contactResult.error.message ?? "").toLowerCase();
-      const duplicate =
-        msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
-
-      if (duplicate) {
-        audienceSynced = true;
-      } else {
-        console.error("Contact upsert error (continuing to send email):", contactResult.error);
+    if (existingContact.error) {
+      if (!isNotFoundResendError(existingContact.error)) {
+        console.error("Contact lookup error (continuing):", existingContact.error);
       }
     } else {
       audienceSynced = true;
+      isNewSignup = false;
     }
 
-    const emailResult = await retryResendRateLimitedCall(
-      "Resend welcome email",
-      () =>
-        resend.emails.send({
-          from: `Inertia <${getFromEmail()}>`,
-          to: email,
-          subject: WELCOME_EMAIL_SUBJECT,
-          html: getWelcomeEmailHtml(email),
-        }),
-    );
-
-    if (emailResult.error) {
-      console.error("Welcome email send error:", emailResult.error);
-      void trackWaitlistSignup("resend_email_error", eventData);
-      return NextResponse.json(
-        { error: "Something went wrong. Please try again.", code: "signup_failed" },
-        { status: 500 },
+    if (isNewSignup) {
+      const contactResult = await retryResendRateLimitedCall(
+        "Resend contact upsert",
+        () =>
+          resend.contacts.create({
+            email,
+            audienceId,
+          }),
       );
+
+      if (contactResult.error) {
+        const msg = String(contactResult.error.message ?? "").toLowerCase();
+        const duplicate =
+          msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
+
+        if (duplicate) {
+          audienceSynced = true;
+          isNewSignup = false;
+        } else {
+          console.error("Contact upsert error (continuing to send email):", contactResult.error);
+        }
+      } else {
+        audienceSynced = true;
+      }
+    }
+
+    if (isNewSignup) {
+      const unsubscribeAddress = getReplyToEmail();
+      const emailResult = await retryResendRateLimitedCall(
+        "Resend welcome email",
+        () =>
+          resend.emails.send({
+            from: `Inertia <${getFromEmail()}>`,
+            to: email,
+            replyTo: unsubscribeAddress,
+            subject: WELCOME_EMAIL_SUBJECT,
+            html: getWelcomeEmailHtml(),
+            text: getWelcomeEmailText(),
+            headers: {
+              "List-Unsubscribe": `<mailto:${unsubscribeAddress}?subject=unsubscribe>`,
+            },
+          }),
+      );
+
+      if (emailResult.error) {
+        console.error("Welcome email send error:", emailResult.error);
+        void trackWaitlistSignup("resend_email_error", eventData);
+        return NextResponse.json(
+          { error: "Something went wrong. Please try again.", code: "signup_failed" },
+          { status: 500 },
+        );
+      }
     }
 
     invalidateCachedWaitlistCount();
 
-    void trackWaitlistSignup("success_sent", {
+    void trackWaitlistSignup(isNewSignup ? "success_new" : "success_existing", {
       ...eventData,
       audience_synced: audienceSynced,
     });
 
     return NextResponse.json({
       success: true,
-      contactStatus: "sent",
+      contactStatus: isNewSignup ? "new" : "existing",
       audienceSynced,
     });
   } catch (error) {
