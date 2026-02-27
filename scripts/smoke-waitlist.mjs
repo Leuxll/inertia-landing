@@ -11,9 +11,13 @@ if (!smokeEmail) {
   process.exit(1);
 }
 
-if (!process.env.RESEND_API_KEY || !process.env.RESEND_AUDIENCE_ID) {
+if (
+  !process.env.RESEND_API_KEY ||
+  !process.env.RESEND_AUDIENCE_ID ||
+  !process.env.RESEND_FROM_EMAIL
+) {
   console.error(
-    "Missing RESEND_API_KEY or RESEND_AUDIENCE_ID. Smoke test requires real signup config.",
+    "Missing RESEND_API_KEY, RESEND_AUDIENCE_ID, or RESEND_FROM_EMAIL. Smoke test requires real signup config.",
   );
   process.exit(1);
 }

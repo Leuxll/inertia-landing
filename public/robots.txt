@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap (add when you create one)
-# Sitemap: https://getmomentum.app/sitemap.xml
+# Sitemap: https://getinertia.app/sitemap.xml
