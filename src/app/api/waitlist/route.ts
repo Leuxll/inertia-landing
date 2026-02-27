@@ -192,14 +192,6 @@ function sanitizePlacement(value: unknown): string | null {
   return normalized;
 }
 
-function isMissingPropertyError(message: string | undefined): boolean {
-  const msg = message?.toLowerCase() ?? "";
-  return (
-    (msg.includes("property") || msg.includes("properties")) &&
-    msg.includes("do not exist")
-  );
-}
-
 async function trackWaitlistSignup(
   outcome: string,
   data: WaitlistEventData,
@@ -241,20 +233,6 @@ export async function POST(request: NextRequest) {
       ...getWaitlistAttributionEventData(attribution),
       placement,
     };
-    const contactProperties = {
-      source: typeof eventData.source === "string" ? eventData.source : null,
-      utm_source: attribution.utmSource,
-      utm_medium: attribution.utmMedium,
-      utm_campaign: attribution.utmCampaign,
-      utm_term: attribution.utmTerm,
-      utm_content: attribution.utmContent,
-      referrer: attribution.referrer,
-      referrer_host:
-        typeof eventData.referrer_host === "string" ? eventData.referrer_host : null,
-      landing_path: attribution.landingPath,
-      signup_placement: placement,
-    };
-
     const email =
       typeof payload.email === "string"
         ? payload.email.trim().toLowerCase()
@@ -307,26 +285,10 @@ export async function POST(request: NextRequest) {
 
     let isNewContact = true;
 
-    const filteredProperties = Object.fromEntries(
-      Object.entries(contactProperties).filter(([, value]) => value !== null && value !== ""),
-    ) as Record<string, string>;
-
-    let contactResult = await resend.contacts.create({
+    const contactResult = await resend.contacts.create({
       email,
       audienceId,
-      ...(Object.keys(filteredProperties).length > 0
-        ? { properties: filteredProperties }
-        : {}),
     });
-
-    // Resend can reject unknown contact properties if they are not pre-defined.
-    // Fallback to a plain contact create so waitlist signup still succeeds.
-    if (contactResult.error && isMissingPropertyError(contactResult.error.message)) {
-      contactResult = await resend.contacts.create({
-        email,
-        audienceId,
-      });
-    }
 
     if (contactResult.error) {
       // Treat "already exists" as success — user is already signed up
