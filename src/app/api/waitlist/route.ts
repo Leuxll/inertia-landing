@@ -18,11 +18,16 @@ import {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const WAITLIST_EVENT_NAME = "waitlist_signup";
 const ALLOWED_PLACEMENTS = new Set(["hero", "bottom"]);
+const WAITLIST_COUNT_TTL_MS = 10 * 60 * 1000;
+const WAITLIST_COUNT_PAGE_LIMIT = 50;
+const WAITLIST_COUNT_PAGE_SIZE = 100;
 
 type WaitlistEventValue = string | number | boolean | null;
 type WaitlistEventData = Record<string, WaitlistEventValue>;
 
-const WAITLIST_COUNT_TTL_MS = 10 * 60 * 1000;
+type ResendOperationResult = {
+  error?: unknown;
+};
 
 let waitlistCountCache:
   | {
@@ -48,6 +53,98 @@ function getFromEmail(): string {
   return process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 }
 
+function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function sanitizePlacement(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().toLowerCase();
+  if (!ALLOWED_PLACEMENTS.has(normalized)) return null;
+  return normalized;
+}
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
+  );
+}
+
+function isRateLimitedResendError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const record = error as Record<string, unknown>;
+  const name = String(record.name ?? "").toLowerCase();
+  const message = String(record.message ?? "").toLowerCase();
+  const statusCode = Number(record.statusCode ?? 0);
+
+  return (
+    statusCode === 429 ||
+    name.includes("rate_limit") ||
+    message.includes("too many requests")
+  );
+}
+
+function getRateLimitBackoffMs(attempt: number): number {
+  const base = 300 * Math.pow(2, attempt);
+  const jitter = Math.floor(Math.random() * 120);
+  return Math.min(base + jitter, 2_500);
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function retryResendRateLimitedCall<T extends ResendOperationResult>(
+  label: string,
+  operation: () => Promise<T>,
+  maxRetries = 3,
+): Promise<T> {
+  let attempt = 0;
+
+  while (true) {
+    const result = await operation();
+    if (!isRateLimitedResendError(result.error) || attempt >= maxRetries) {
+      return result;
+    }
+
+    const waitMs = getRateLimitBackoffMs(attempt);
+    console.warn(
+      `${label} rate limited. Retrying in ${waitMs}ms (attempt ${attempt + 1}/${maxRetries + 1})`,
+    );
+    await sleep(waitMs);
+    attempt += 1;
+  }
+}
+
+function getCachedWaitlistCount(): number | null {
+  if (!waitlistCountCache) return null;
+  const age = Date.now() - waitlistCountCache.updatedAt;
+  if (age > WAITLIST_COUNT_TTL_MS) return null;
+  return waitlistCountCache.count;
+}
+
+function setCachedWaitlistCount(count: number): void {
+  waitlistCountCache = {
+    count,
+    updatedAt: Date.now(),
+  };
+}
+
+function invalidateCachedWaitlistCount(): void {
+  waitlistCountCache = null;
+}
+
+async function trackWaitlistSignup(
+  outcome: string,
+  data: WaitlistEventData,
+): Promise<void> {
+  try {
+    await track(WAITLIST_EVENT_NAME, { outcome, ...data });
+  } catch (error) {
+    console.error("Waitlist analytics track error:", error);
+  }
+}
+
 function extractAudienceContactCount(data: unknown): number | null {
   if (!data || typeof data !== "object") return null;
   const record = data as Record<string, unknown>;
@@ -66,7 +163,6 @@ function extractAudienceContactCount(data: unknown): number | null {
     }
   }
 
-  // Some SDK responses nest the payload under `data`.
   if (record.data && record.data !== data) {
     return extractAudienceContactCount(record.data);
   }
@@ -74,16 +170,18 @@ function extractAudienceContactCount(data: unknown): number | null {
   return null;
 }
 
-async function getUniqueWaitlistCountFromResend(
+async function getUniqueWaitlistCountFromAudience(
   resend: Resend,
   audienceId: string,
 ): Promise<number> {
   try {
-    const audience = await resend.audiences.get(audienceId);
+    const audience = await retryResendRateLimitedCall("Resend audience get", () =>
+      resend.audiences.get(audienceId),
+    );
     const audienceCount = extractAudienceContactCount(audience.data);
     if (typeof audienceCount === "number") return audienceCount;
   } catch (error) {
-    console.error("Resend audience count fallback to pagination:", error);
+    console.error("Resend audience count fallback to contacts pagination:", error);
   }
 
   const seen = new Set<string>();
@@ -91,13 +189,16 @@ async function getUniqueWaitlistCountFromResend(
   let hasMore = true;
   let pageGuard = 0;
 
-  while (hasMore && pageGuard < 50) {
+  while (hasMore && pageGuard < WAITLIST_COUNT_PAGE_LIMIT) {
     pageGuard += 1;
-    const page = await resend.contacts.list({
-      audienceId,
-      limit: 100,
-      ...(after ? { after } : {}),
-    });
+
+    const page = await retryResendRateLimitedCall("Resend contact list", () =>
+      resend.contacts.list({
+        audienceId,
+        limit: WAITLIST_COUNT_PAGE_SIZE,
+        ...(after ? { after } : {}),
+      }),
+    );
 
     if (page.error) {
       throw page.error;
@@ -107,7 +208,7 @@ async function getUniqueWaitlistCountFromResend(
     for (const row of rows) {
       const key =
         typeof row.email === "string" && row.email.length > 0
-          ? row.email.toLowerCase()
+          ? normalizeEmail(row.email)
           : row.id;
       if (key) seen.add(key);
     }
@@ -116,38 +217,58 @@ async function getUniqueWaitlistCountFromResend(
     const last = rows[rows.length - 1];
     after = typeof last?.id === "string" ? last.id : undefined;
 
-    // Avoid infinite loop if Resend returns has_more without a usable cursor.
     if (hasMore && !after) break;
   }
 
   return seen.size;
 }
 
-function getCachedWaitlistCount(): number | null {
-  if (!waitlistCountCache) return null;
-  const age = Date.now() - waitlistCountCache.updatedAt;
-  if (age > WAITLIST_COUNT_TTL_MS) return null;
-  return waitlistCountCache.count;
-}
+async function getUniqueWaitlistCountFromEmailHistory(
+  resend: Resend,
+): Promise<number> {
+  const seen = new Set<string>();
+  let after: string | undefined;
+  let hasMore = true;
+  let pageGuard = 0;
 
-function setCachedWaitlistCount(count: number): void {
-  waitlistCountCache = {
-    count,
-    updatedAt: Date.now(),
-  };
-}
+  while (hasMore && pageGuard < WAITLIST_COUNT_PAGE_LIMIT) {
+    pageGuard += 1;
 
-function bumpCachedWaitlistCount(): void {
-  if (!waitlistCountCache) return;
-  waitlistCountCache = {
-    count: waitlistCountCache.count + 1,
-    updatedAt: Date.now(),
-  };
+    const page = await retryResendRateLimitedCall("Resend email list", () =>
+      resend.emails.list({
+        limit: WAITLIST_COUNT_PAGE_SIZE,
+        ...(after ? { after } : {}),
+      }),
+    );
+
+    if (page.error) {
+      throw page.error;
+    }
+
+    const rows = page.data?.data ?? [];
+    for (const row of rows) {
+      if (row.subject !== WELCOME_EMAIL_SUBJECT) continue;
+      for (const recipient of row.to ?? []) {
+        if (typeof recipient === "string" && recipient.length > 0) {
+          seen.add(normalizeEmail(recipient));
+        }
+      }
+    }
+
+    hasMore = page.data?.has_more === true;
+    const last = rows[rows.length - 1];
+    after = typeof last?.id === "string" ? last.id : undefined;
+
+    // Avoid infinite loop if API returns has_more without a usable cursor.
+    if (hasMore && !after) break;
+  }
+
+  return seen.size;
 }
 
 async function getWaitlistCountWithCache(
   resend: Resend,
-  audienceId: string,
+  audienceId: string | null,
 ): Promise<number> {
   const cached = getCachedWaitlistCount();
   if (cached !== null) return cached;
@@ -163,7 +284,9 @@ async function getWaitlistCountWithCache(
   }
 
   waitlistCountInflight = (async () => {
-    const fresh = await getUniqueWaitlistCountFromResend(resend, audienceId);
+    const fresh = audienceId
+      ? await getUniqueWaitlistCountFromAudience(resend, audienceId)
+      : await getUniqueWaitlistCountFromEmailHistory(resend);
     setCachedWaitlistCount(fresh);
     return fresh;
   })();
@@ -176,30 +299,6 @@ async function getWaitlistCountWithCache(
     throw error;
   } finally {
     waitlistCountInflight = null;
-  }
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
-  );
-}
-
-function sanitizePlacement(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const normalized = value.trim().toLowerCase();
-  if (!ALLOWED_PLACEMENTS.has(normalized)) return null;
-  return normalized;
-}
-
-async function trackWaitlistSignup(
-  outcome: string,
-  data: WaitlistEventData,
-): Promise<void> {
-  try {
-    await track(WAITLIST_EVENT_NAME, { outcome, ...data });
-  } catch (error) {
-    console.error("Waitlist analytics track error:", error);
   }
 }
 
@@ -233,10 +332,10 @@ export async function POST(request: NextRequest) {
       ...getWaitlistAttributionEventData(attribution),
       placement,
     };
-    const email =
-      typeof payload.email === "string"
-        ? payload.email.trim().toLowerCase()
-        : null;
+
+    const rawEmail =
+      typeof payload.email === "string" ? payload.email : null;
+    const email = rawEmail ? normalizeEmail(rawEmail) : null;
 
     if (!email) {
       void trackWaitlistSignup("missing_email", eventData);
@@ -270,7 +369,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /* ---- Resend: create contact ---- */
+    /* ---- Resend: audience upsert + welcome email ---- */
     const resend = getResend();
     const audienceId = getAudienceId();
 
@@ -283,53 +382,62 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let isNewContact = true;
+    let audienceSynced = false;
 
-    const contactResult = await resend.contacts.create({
-      email,
-      audienceId,
-    });
+    const contactResult = await retryResendRateLimitedCall(
+      "Resend contact upsert",
+      () =>
+        resend.contacts.create({
+          email,
+          audienceId,
+        }),
+    );
 
     if (contactResult.error) {
-      // Treat "already exists" as success — user is already signed up
-      const msg = contactResult.error.message?.toLowerCase() ?? "";
-      if (msg.includes("already") || msg.includes("exists") || msg.includes("duplicate")) {
-        isNewContact = false;
+      const msg = String(contactResult.error.message ?? "").toLowerCase();
+      const duplicate =
+        msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
+
+      if (duplicate) {
+        audienceSynced = true;
       } else {
-        console.error("Resend contact creation error:", contactResult.error);
-        void trackWaitlistSignup("resend_contact_error", eventData);
-        return NextResponse.json(
-          { error: "Something went wrong. Please try again.", code: "signup_failed" },
-          { status: 500 },
-        );
+        console.error("Contact upsert error (continuing to send email):", contactResult.error);
       }
+    } else {
+      audienceSynced = true;
     }
 
-    /* ---- Send welcome email (only for new contacts) ---- */
-    if (isNewContact) {
-      bumpCachedWaitlistCount();
-
-      const emailResult = await resend.emails.send({
-        from: `Inertia <${getFromEmail()}>`,
-        to: email,
-        subject: WELCOME_EMAIL_SUBJECT,
-        html: getWelcomeEmailHtml(email),
-      });
-
-      if (emailResult.error) {
-        // Log but don't fail — the contact was created, that's what matters
-        console.error("Welcome email send error:", emailResult.error);
-      }
-    }
-
-    void trackWaitlistSignup(
-      isNewContact ? "success_new" : "success_existing",
-      eventData,
+    const emailResult = await retryResendRateLimitedCall(
+      "Resend welcome email",
+      () =>
+        resend.emails.send({
+          from: `Inertia <${getFromEmail()}>`,
+          to: email,
+          subject: WELCOME_EMAIL_SUBJECT,
+          html: getWelcomeEmailHtml(email),
+        }),
     );
+
+    if (emailResult.error) {
+      console.error("Welcome email send error:", emailResult.error);
+      void trackWaitlistSignup("resend_email_error", eventData);
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again.", code: "signup_failed" },
+        { status: 500 },
+      );
+    }
+
+    invalidateCachedWaitlistCount();
+
+    void trackWaitlistSignup("success_sent", {
+      ...eventData,
+      audience_synced: audienceSynced,
+    });
 
     return NextResponse.json({
       success: true,
-      contactStatus: isNewContact ? "new" : "existing",
+      contactStatus: "sent",
+      audienceSynced,
     });
   } catch (error) {
     console.error("Waitlist POST error:", error);
@@ -352,7 +460,7 @@ export async function GET() {
     const resend = getResend();
     const audienceId = getAudienceId();
 
-    if (!resend || !audienceId) {
+    if (!resend) {
       return NextResponse.json({ count: 0 });
     }
 

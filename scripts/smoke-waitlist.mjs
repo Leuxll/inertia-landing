@@ -25,23 +25,17 @@ function sleep(ms) {
 async function waitForServer(maxAttempts = 40) {
   for (let i = 0; i < maxAttempts; i += 1) {
     try {
-      const res = await fetch(`${baseUrl}/api/health`);
+      // Readiness check should not consume external API quota.
+      const res = await fetch(`${baseUrl}/`);
       if (res.ok) {
-        const health = await res.json();
-        if (
-          health?.checks?.resend_api === true &&
-          health?.checks?.resend_audience === true
-        ) {
-          return;
-        }
-        throw new Error("health checks not ready");
+        return;
       }
     } catch {
       // keep polling
     }
     await sleep(500);
   }
-  throw new Error("Timed out waiting for local server health check");
+  throw new Error("Timed out waiting for local server readiness");
 }
 
 async function runSmoke() {
@@ -71,7 +65,7 @@ async function runSmoke() {
     throw new Error(`Signup smoke returned unexpected payload: ${JSON.stringify(payload)}`);
   }
 
-  if (!["new", "existing"].includes(payload.contactStatus)) {
+  if (!["new", "existing", "sent"].includes(payload.contactStatus)) {
     throw new Error(
       `Signup smoke returned invalid contactStatus: ${JSON.stringify(payload)}`,
     );
