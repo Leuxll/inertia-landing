@@ -18,8 +18,24 @@ const inter = Inter({
   display: "swap",
 });
 
+function getMetadataBase(): URL {
+  const fallbackUrl = "https://getinertia.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+  if (!siteUrl) {
+    return new URL(fallbackUrl);
+  }
+
+  try {
+    return new URL(siteUrl);
+  } catch (error) {
+    console.warn("Invalid NEXT_PUBLIC_SITE_URL, using fallback:", error);
+    return new URL(fallbackUrl);
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://getinertia.app"),
+  metadataBase: getMetadataBase(),
   title: "Inertia — A Habit Tracker That Respects Your Wallet",
   description:
     "A beautifully designed habit tracker with a free core experience and optional Pro later. No ads. No data harvesting.",
