@@ -18,7 +18,24 @@ const inter = Inter({
   display: "swap",
 });
 
+function getMetadataBase(): URL {
+  const fallbackUrl = "https://getinertia.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+  if (!siteUrl) {
+    return new URL(fallbackUrl);
+  }
+
+  try {
+    return new URL(siteUrl);
+  } catch (error) {
+    console.warn("Invalid NEXT_PUBLIC_SITE_URL, using fallback:", error);
+    return new URL(fallbackUrl);
+  }
+}
+
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: "Inertia — A Habit Tracker That Respects Your Wallet",
   description:
     "A beautifully designed habit tracker with a free core experience and optional Pro later. No ads. No data harvesting.",
@@ -27,7 +44,7 @@ export const metadata: Metadata = {
   creator: "Inertia",
   publisher: "Inertia",
   applicationName: "Inertia",
-  
+
   // Favicons
   icons: {
     icon: [
@@ -40,7 +57,7 @@ export const metadata: Metadata = {
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
   },
-  
+
   // Open Graph
   openGraph: {
     type: "website",
@@ -58,7 +75,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   // Twitter
   twitter: {
     card: "summary_large_image",
@@ -68,14 +85,14 @@ export const metadata: Metadata = {
     description: "Free core habit tracking. Optional Pro later. No ads. No data harvesting.",
     images: ["/og-image.png"],
   },
-  
+
   // Apple
   appleWebApp: {
     capable: true,
     title: "Inertia",
     statusBarStyle: "black-translucent",
   },
-  
+
   // Verification (add your verification codes when you have them)
   // verification: {
   //   google: "your-google-verification-code",
@@ -83,13 +100,13 @@ export const metadata: Metadata = {
   //     "apple-mobile-web-app-capable": ["yes"],
   //   },
   // },
-  
+
   // Manifest
   manifest: "/site.webmanifest",
 };
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
 };
 

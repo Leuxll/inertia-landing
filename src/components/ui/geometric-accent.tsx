@@ -57,7 +57,7 @@ export function GeometricAccent({ className }: GeometricAccentProps) {
       <motion.div
         className="absolute w-[400px] h-[400px] md:w-[500px] md:h-[500px] rounded-full border border-text/[0.05]"
         animate={prefersReducedMotion ? {} : { rotate: 360 }}
-        style={{ y: y1 }}
+        style={{ y: y2 }}
         transition={{
           duration: 120,
           ease: "linear",
