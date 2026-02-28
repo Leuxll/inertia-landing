@@ -20,6 +20,7 @@ interface CtaBlockProps {
   className?: string;
   compact?: boolean;
   centered?: boolean;
+  inline?: boolean;
   placement?: "hero" | "bottom";
 }
 
@@ -32,6 +33,7 @@ export function CtaBlock({
   compact = false,
   centered = false,
   placement = "hero",
+  inline = false,
 }: CtaBlockProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -157,8 +159,9 @@ export function CtaBlock({
           >
             <div
               className={cn(
-                "flex flex-col w-full max-w-md",
-                compact ? "gap-2" : "gap-3"
+                "flex w-full",
+                inline ? "flex-col sm:flex-row gap-2" : "flex-col max-w-md",
+                !inline && (compact ? "gap-2" : "gap-3")
               )}
             >
               <input
@@ -179,14 +182,15 @@ export function CtaBlock({
                 }}
                 disabled={status === "loading"}
                 placeholder="you@example.com"
-                className="w-full bg-surface text-text border border-border rounded-none px-4 py-4 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300"
+                className={cn("bg-surface text-text border border-border rounded-none px-4 py-3 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300", inline ? "w-full sm:flex-1" : "w-full")}
               />
               <Button
                 type="submit"
                 onClick={() => trackFormEvent("waitlist_cta_click")}
                 disabled={status === "loading"}
                 className={cn(
-                  "w-full text-center",
+                  "text-center",
+                  inline ? "w-full sm:w-auto sm:shrink-0 sm:px-8" : "w-full",
                   placement === "hero" && "cta-polish-button"
                 )}
               >

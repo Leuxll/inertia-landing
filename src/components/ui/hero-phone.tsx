@@ -42,7 +42,7 @@ export function HeroPhone({ src, alt, className }: HeroPhoneProps) {
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
         <motion.div
-          className="relative w-[260px] md:w-[320px] lg:w-[360px] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface overflow-hidden shadow-[0_0_70px_rgba(244,244,240,0.035)]"
+          className="relative w-[230px] md:w-[250px] lg:w-[270px] xl:w-[290px] 2xl:w-[320px] max-h-[60vh] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface overflow-hidden shadow-[0_0_70px_rgba(244,244,240,0.035)]"
           animate={floatAnimation}
           transition={
             prefersReducedMotion
@@ -65,7 +65,7 @@ export function HeroPhone({ src, alt, className }: HeroPhoneProps) {
             fill
             priority
             className="object-cover"
-            sizes="(max-width: 768px) 260px, (max-width: 1024px) 320px, 360px"
+            sizes="(max-width: 768px) 230px, (max-width: 1024px) 250px, (max-width: 1280px) 270px, (max-width: 1536px) 290px, 320px"
           />
         </motion.div>
       </motion.div>

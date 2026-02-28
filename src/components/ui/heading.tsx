@@ -11,8 +11,8 @@ interface HeadingProps {
 }
 
 const sizeMap = {
-  h1: "text-4xl md:text-6xl lg:text-8xl tracking-tight",
-  h2: "text-3xl md:text-5xl lg:text-6xl tracking-tight",
+  h1: "text-4xl md:text-5xl lg:text-6xl xl:text-6xl 2xl:text-7xl tracking-tight",
+  h2: "text-3xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl tracking-tight",
   h3: "text-2xl md:text-3xl lg:text-4xl",
   h4: "text-xl md:text-2xl",
 };

@@ -10,8 +10,8 @@ interface SectionProps {
 }
 
 const densityMap = {
-  hero: "py-16 md:py-20 lg:py-24",
-  airy: "py-20 md:py-28 lg:py-32",
+  hero: "py-12 md:py-16 lg:py-16 xl:py-20 2xl:py-24",
+  airy: "py-16 md:py-20 lg:py-20 xl:py-24 2xl:py-32",
   standard: "py-16 md:py-20 lg:py-24",
   dense: "py-12 md:py-16 lg:py-20",
 } as const;
