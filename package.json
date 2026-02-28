@@ -11,7 +11,7 @@
     "smoke:waitlist": "node scripts/smoke-waitlist.mjs",
     "deploy:guard": "pnpm build && pnpm smoke:waitlist",
     "test-waitlist": "curl -X POST http://localhost:3000/api/waitlist -H 'Content-Type: application/json' -d '{\"email\":\"test@example.com\"}'",
-    "test-production": "NODE_ENV=production npm run build && npm run start"
+    "test-production": "NODE_ENV=production pnpm build && pnpm start"
   },
   "dependencies": {
     "@upstash/redis": "^1.36.3",
