@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { track } from "@vercel/analytics";
 import { isWaitlistMode } from "@/lib/config";
@@ -39,6 +39,9 @@ export function CtaBlock({
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [inputStartedTracked, setInputStartedTracked] = useState(false);
+  const emailInputId = useId();
+  const emailHintId = `${emailInputId}-hint`;
+  const emailErrorId = `${emailInputId}-error`;
 
   function trackFormEvent(
     eventName: string,
@@ -157,6 +160,18 @@ export function CtaBlock({
               compact ? "gap-3" : "gap-4"
             )}
           >
+            <div className={cn("w-full", inline ? "max-w-none" : "max-w-md")}>
+              <label
+                htmlFor={emailInputId}
+                className={cn(
+                  "font-body text-xs uppercase tracking-[0.14em] text-text-muted/70",
+                  centered ? "text-center" : "text-left",
+                )}
+              >
+                Email address
+              </label>
+            </div>
+
             <div
               className={cn(
                 "flex w-full",
@@ -165,6 +180,7 @@ export function CtaBlock({
               )}
             >
               <input
+                id={emailInputId}
                 type="email"
                 value={email}
                 onFocus={() => {
@@ -182,6 +198,17 @@ export function CtaBlock({
                 }}
                 disabled={status === "loading"}
                 placeholder="you@example.com"
+                autoComplete="email"
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                aria-invalid={status === "error"}
+                aria-describedby={
+                  status === "error" && errorMessage
+                    ? `${emailHintId} ${emailErrorId}`
+                    : emailHintId
+                }
                 className={cn("bg-surface text-text border border-border rounded-none px-4 py-3 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300", inline ? "w-full sm:flex-1" : "w-full")}
               />
               <Button
@@ -194,18 +221,31 @@ export function CtaBlock({
                   placement === "hero" && "cta-polish-button"
                 )}
               >
-                {status === "loading" ? "Joining..." : "Get Early Access"}
+                {status === "loading"
+                  ? "Joining..."
+                  : placement === "hero"
+                    ? "Get Access"
+                    : "Get Early Access"}
               </Button>
             </div>
 
-            <Text variant="small" className={cn("text-text-muted/70", centered ? "text-center" : "text-left")}>
-              Email only. No spam. Small-batch invites.
-            </Text>
+            <p
+              id={emailHintId}
+              className={cn(
+                "font-body text-sm leading-relaxed text-text-muted/70",
+                centered ? "text-center" : "text-left",
+              )}
+            >
+              Invite-only onboarding. No spam. Unsubscribe anytime.
+            </p>
 
             {status === "error" && errorMessage && (
-              <Text variant="small" className="text-text-muted/80">
+              <p
+                id={emailErrorId}
+                className="font-body text-sm leading-relaxed text-text-muted/80"
+              >
                 {errorMessage}
-              </Text>
+              </p>
             )}
           </motion.form>
         )}

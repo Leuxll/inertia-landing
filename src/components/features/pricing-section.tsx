@@ -11,7 +11,7 @@ import { fadeUp } from "@/lib/animations";
 
 export function PricingSection() {
   return (
-    <Section density="airy" className="justify-center">
+    <Section fullHeight density="airy" className="justify-center">
       <Container>
         <ScrollReveal variant="stagger">
           <div className="flex flex-col gap-12 lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">

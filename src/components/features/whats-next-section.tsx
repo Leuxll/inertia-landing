@@ -60,7 +60,7 @@ const upcomingFeatures = [
 
 export function WhatsNextSection() {
   return (
-    <Section density="standard" className="justify-center">
+    <Section fullHeight density="standard" className="justify-center">
       <Container>
         <ScrollReveal variant="stagger">
           <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12 lg:items-start">

@@ -21,20 +21,22 @@ export function PhoneFrame({ src, alt, className, priority }: PhoneFrameProps) {
       />
 
       <div
-        className="relative w-[260px] md:w-[280px] lg:w-[300px] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface overflow-hidden shadow-[0_0_60px_rgba(244,244,240,0.03)]"
+        className="relative w-[260px] md:w-[280px] lg:w-[300px] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface shadow-[0_0_60px_rgba(244,244,240,0.03)]"
       >
-        {/* Dynamic Island */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[80px] h-[24px] rounded-full bg-bg z-10" />
+        <div className="absolute inset-[6px] overflow-hidden rounded-[2.15rem] bg-bg">
+          <div className="absolute inset-[8px]">
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              priority={priority}
+              className="object-contain"
+              sizes="(max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
+            />
+          </div>
+        </div>
 
-        {/* Screenshot */}
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          className="object-cover"
-          sizes="(max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
-        />
+        <div className="absolute top-3 left-1/2 z-10 h-[20px] w-[72px] -translate-x-1/2 rounded-full bg-bg/95" />
       </div>
     </div>
   );

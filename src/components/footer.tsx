@@ -83,11 +83,11 @@ export function Footer({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "border-t border-border py-6 px-6 md:px-8 lg:px-12",
+        "border-t border-border py-4 px-6 md:px-8 lg:px-12",
         className
       )}
     >
-      <div className="mx-auto max-w-5xl flex flex-col items-center gap-4">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3">
         {/* Logo */}
         <div className="text-text-muted">
           <FooterLogo />
@@ -109,7 +109,7 @@ export function Footer({ className }: { className?: string }) {
         </div>
 
         {/* Social icons */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {socialLinks.map((link) => {
             const Icon = link.icon;
             return (
