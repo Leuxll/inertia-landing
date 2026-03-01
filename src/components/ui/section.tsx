@@ -29,7 +29,7 @@ export function Section({
       className={cn(
         "flex flex-col items-center px-6 md:px-8 lg:px-12",
         densityMap[density],
-        fullHeight && "min-h-dvh",
+        fullHeight && "min-h-dvh py-0",
         className,
       )}
     >

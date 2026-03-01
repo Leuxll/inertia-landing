@@ -13,15 +13,19 @@ export function HeroSection() {
       id="hero"
       fullHeight
       density="hero"
-      className="relative overflow-x-hidden justify-center py-6 md:py-8 lg:py-10"
+      className="relative overflow-x-hidden justify-center py-6 md:py-8 lg:py-10 xl:py-10 2xl:py-10"
     >
       <GeometricAccent />
 
       <Container size="hero" className="relative z-10 w-full">
-        <div className="flex min-h-[calc(100dvh-5rem)] w-full flex-col justify-center gap-6 md:min-h-[calc(100dvh-5.5rem)] md:gap-8 lg:min-h-[calc(100dvh-6rem)]">
-          <div className="grid items-center gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 2xl:gap-12">
-          {/* Copy */}
-          <div className="flex flex-col items-start text-left">
+        <div className="flex w-full flex-col justify-center">
+          <div className="grid w-full items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:grid-rows-[auto_auto] lg:gap-x-14 lg:gap-y-8">
+            <div className="flex flex-col items-start gap-5 text-left lg:col-start-1 lg:row-start-1">
+            <div className="hero-polish-float inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-4 py-1.5 font-body text-[11px] uppercase tracking-[0.16em] text-text-muted/80">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Coming to iOS
+            </div>
+
             <Text
               variant="small"
               className="hero-polish-float uppercase tracking-[0.3em]"
@@ -32,76 +36,104 @@ export function HeroSection() {
 
             <Heading
               as="h1"
-              className="hero-polish-title mt-4 text-4xl leading-[0.93] md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-6xl"
+              className="hero-polish-title max-w-[18ch] text-[clamp(3rem,7.2vw,5.95rem)] leading-[0.93] tracking-[-0.02em]"
             >
-              A Habit Tracker for Builders Who Hate Subscription Bloat
+              A Habit Tracker for Builders Who Hate{" "}
+              <span className="italic text-text-muted/70">Subscription Bloat.</span>
             </Heading>
 
             <Text
               variant="muted"
-              className="hero-polish-float mt-4 max-w-[52ch] text-base md:text-lg"
+              className="hero-polish-float max-w-[50ch] text-[clamp(1.05rem,2.1vw,1.4rem)] leading-[1.45]"
               style={{ ["--hero-delay" as string]: "0.35s" }}
             >
-              Free core. Optional Pro later with yearly or lifetime pricing.
-              No ads. No data harvesting. No forced subscription.
+              Free core features. Optional one-time Pro later. No ads. No data
+              harvesting. Just pure focus.
             </Text>
 
-            <div
-              className="hero-polish-cta-zone mt-6 w-full max-w-lg"
-              style={{ ["--hero-delay" as string]: "0.55s" }}
-            >
+            <div className="hero-polish-cta-zone w-full max-w-lg" style={{ ["--hero-delay" as string]: "0.55s" }}>
               <WaitlistCounter placement="hero" tone="chip" minCount={10} />
               <CtaBlock placement="hero" inline className="mt-3" />
             </div>
 
             {/* Trust signals — compact inline row */}
             <div
-              className="hero-polish-float mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-body text-[11px] uppercase tracking-[0.12em] text-text-muted/50"
+              className="hero-polish-float flex flex-wrap items-center gap-x-6 gap-y-2 font-body text-[11px] uppercase tracking-[0.14em] text-text-muted/60"
               style={{ ["--hero-delay" as string]: "0.85s" }}
             >
-              <span className="flex items-center gap-1.5">
+              <span className="inline-flex items-center gap-2">
                 <svg
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="text-text-muted/40"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-text-muted/70"
+                  aria-hidden="true"
                 >
-                  <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 16.99 2.97 12.5 4.7 9.56C5.55 8.1 7.02 7.17 8.63 7.15C9.92 7.13 11.13 8.01 11.93 8.01C12.73 8.01 14.2 6.95 15.77 7.11C16.42 7.14 18.09 7.38 19.17 8.95C19.08 9.01 16.88 10.28 16.91 12.97C16.94 16.19 19.68 17.23 19.71 17.24C19.68 17.33 19.25 18.81 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z" />
+                  <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" />
                 </svg>
-                Coming to iOS
+                Local-first
               </span>
-              <span className="text-text-muted/20">·</span>
-              <span>Local-first</span>
-              <span className="text-text-muted/20">·</span>
-              <span>Free core</span>
-              <span className="text-text-muted/20">·</span>
-              <span>No ads</span>
-              <span className="text-text-muted/20">·</span>
-              <span>No data harvesting</span>
+              <span className="inline-flex items-center gap-2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-text-muted/70"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M5 19L19 5" />
+                </svg>
+                No ads
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-text-muted/70"
+                  aria-hidden="true"
+                >
+                  <path d="M12 22s8-4 8-10V6l-8-4-8 4v6c0 6 8 10 8 10z" />
+                </svg>
+                Private
+              </span>
             </div>
-          </div>
+            </div>
 
-          {/* Phone */}
-            <div className="flex items-center justify-center lg:justify-end">
+            <div className="flex items-center justify-center lg:col-start-2 lg:row-span-2 lg:justify-end">
               <HeroPhone
                 src="/screenshots/insights.png"
                 alt="Inertia insights dashboard showing daily metrics, consistency score, and heatmap"
               />
             </div>
-          </div>
 
-          <div className="mx-auto w-full max-w-4xl rounded-2xl border border-border bg-surface/50 px-5 py-4 backdrop-blur-sm">
-            <Text
-              variant="small"
-              className="uppercase tracking-[0.18em] text-text-muted/60"
-            >
-              Founder note
-            </Text>
-            <Text variant="muted" className="mt-1.5 text-sm md:text-base">
-              I built Inertia after paying $12/month to log basic habits. I wanted
-              something simpler, private, and fairly priced.
-            </Text>
+            <div className="w-full max-w-[34rem] lg:col-start-1 lg:row-start-2">
+              <div className="gradient-border rounded-2xl border border-border bg-surface/45 p-3 backdrop-blur-sm md:p-4">
+                <p className="font-display italic text-[clamp(0.88rem,1.35vw,1.02rem)] leading-[1.45] text-text-muted/78">
+                  &ldquo;I built Inertia after paying $12/month to log basic habits. I
+                  wanted something simpler, private, and fairly priced.&rdquo;
+                </p>
+                <div className="mt-2 font-body text-[9px] tracking-[0.12em] text-text-muted/65">
+                  ~@leuxll
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Container>

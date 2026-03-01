@@ -42,7 +42,7 @@ export function HeroPhone({ src, alt, className }: HeroPhoneProps) {
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
         <motion.div
-          className="relative w-[230px] md:w-[250px] lg:w-[270px] xl:w-[290px] 2xl:w-[320px] max-h-[60vh] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface overflow-hidden shadow-[0_0_70px_rgba(244,244,240,0.035)]"
+          className="relative w-[260px] md:w-[280px] lg:w-[300px] aspect-[9/19.5] rounded-[2.5rem] border border-border bg-surface shadow-[0_0_70px_rgba(244,244,240,0.035)]"
           animate={floatAnimation}
           transition={
             prefersReducedMotion
@@ -55,18 +55,20 @@ export function HeroPhone({ src, alt, className }: HeroPhoneProps) {
                 }
           }
         >
-          {/* Dynamic Island */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[80px] h-[24px] rounded-full bg-bg z-10" />
+          <div className="absolute inset-[6px] overflow-hidden rounded-[2.15rem] bg-bg">
+            <div className="absolute inset-[8px]">
+              <Image
+                src={src}
+                alt={alt}
+                fill
+                priority
+                className="object-contain"
+                sizes="(max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
+              />
+            </div>
+          </div>
 
-          {/* Screenshot */}
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            priority
-            className="object-cover"
-            sizes="(max-width: 768px) 230px, (max-width: 1024px) 250px, (max-width: 1280px) 270px, (max-width: 1536px) 290px, 320px"
-          />
+          <div className="absolute top-3 left-1/2 z-10 h-[18px] w-[66px] -translate-x-1/2 rounded-full bg-bg/95" />
         </motion.div>
       </motion.div>
     </div>
