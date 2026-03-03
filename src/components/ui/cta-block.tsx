@@ -1,20 +1,13 @@
 "use client";
 
-import { useId, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { track } from "@vercel/analytics";
 import { isWaitlistMode } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { smoothTransition } from "@/lib/animations";
 import { cn } from "@/lib/utils";
-import {
-  getClientWaitlistAttribution,
-  getWaitlistAttributionEventData,
-} from "@/lib/waitlist-attribution";
-
-type FormStatus = "idle" | "loading" | "success" | "error";
+import { useWaitlistForm } from "@/lib/use-waitlist-form";
 
 interface CtaBlockProps {
   className?: string;
@@ -24,9 +17,141 @@ interface CtaBlockProps {
   placement?: "hero" | "bottom";
 }
 
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+/* -------------------------------------------------------------------------- */
+/*  Sub-components                                                            */
+/* -------------------------------------------------------------------------- */
+
+function SuccessMessage({ centered }: { centered: boolean }) {
+  return (
+    <motion.div
+      key="success"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={smoothTransition}
+      className={cn("flex flex-col gap-2 py-4", centered ? "items-center" : "items-start")}
+    >
+      <Heading as="h4" className={centered ? "text-center" : "text-left"}>
+        You&rsquo;re in.
+      </Heading>
+      <Text variant="muted" className={centered ? "text-center" : "text-left"}>
+        Check your inbox, spam, and promotions.
+      </Text>
+    </motion.div>
+  );
 }
+
+interface WaitlistFormProps {
+  form: ReturnType<typeof useWaitlistForm>;
+  centered: boolean;
+  compact: boolean;
+  inline: boolean;
+  placement: "hero" | "bottom";
+}
+
+function WaitlistForm({
+  form,
+  centered,
+  compact,
+  inline,
+  placement,
+}: WaitlistFormProps) {
+  return (
+    <motion.form
+      key="form"
+      onSubmit={form.handleSubmit}
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={smoothTransition}
+      className={cn(
+        "flex flex-col w-full",
+        centered ? "items-center" : "items-start",
+        compact ? "gap-3" : "gap-4"
+      )}
+    >
+      <div className={cn("w-full", inline ? "max-w-none" : "max-w-md")}>
+        <label
+          htmlFor={form.emailInputId}
+          className={cn(
+            "font-body text-xs uppercase tracking-[0.14em] text-text-muted/70",
+            centered ? "text-center" : "text-left",
+          )}
+        >
+          Email address
+        </label>
+      </div>
+
+      <div
+        className={cn(
+          "flex w-full",
+          inline ? "flex-col sm:flex-row gap-2" : "flex-col max-w-md",
+          !inline && (compact ? "gap-2" : "gap-3")
+        )}
+      >
+        <input
+          id={form.emailInputId}
+          type="email"
+          value={form.email}
+          onFocus={form.handleInputFocus}
+          onChange={form.handleInputChange}
+          disabled={form.isLoading}
+          placeholder="you@example.com"
+          autoComplete="email"
+          inputMode="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          aria-invalid={form.isError}
+          aria-describedby={
+            form.isError && form.errorMessage
+              ? `${form.emailHintId} ${form.emailErrorId}`
+              : form.emailHintId
+          }
+          className={cn("bg-surface text-text border border-border rounded-none px-4 py-3 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300", inline ? "w-full sm:flex-1" : "w-full")}
+        />
+        <Button
+          type="submit"
+          onClick={() => form.trackFormEvent("waitlist_cta_click")}
+          disabled={form.isLoading}
+          className={cn(
+            "text-center",
+            inline ? "w-full sm:w-auto sm:shrink-0 sm:px-8" : "w-full",
+            placement === "hero" && "cta-polish-button"
+          )}
+        >
+          {form.isLoading
+            ? "Joining..."
+            : placement === "hero"
+              ? "Get Access"
+              : "Get Early Access"}
+        </Button>
+      </div>
+
+      <p
+        id={form.emailHintId}
+        className={cn(
+          "font-body text-sm leading-relaxed text-text-muted/70",
+          centered ? "text-center" : "text-left",
+        )}
+      >
+        Invite-only onboarding. No spam. Unsubscribe anytime.
+      </p>
+
+      {form.isError && form.errorMessage && (
+        <p
+          id={form.emailErrorId}
+          className="font-body text-sm leading-relaxed text-text-muted/80"
+        >
+          {form.errorMessage}
+        </p>
+      )}
+    </motion.form>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Main component                                                            */
+/* -------------------------------------------------------------------------- */
 
 export function CtaBlock({
   className,
@@ -35,83 +160,7 @@ export function CtaBlock({
   placement = "hero",
   inline = false,
 }: CtaBlockProps) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<FormStatus>("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [inputStartedTracked, setInputStartedTracked] = useState(false);
-  const emailInputId = useId();
-  const emailHintId = `${emailInputId}-hint`;
-  const emailErrorId = `${emailInputId}-error`;
-
-  function trackFormEvent(
-    eventName: string,
-    extra: Record<string, string | number | boolean | null> = {},
-  ) {
-    const attribution = getClientWaitlistAttribution();
-    const attributionData = getWaitlistAttributionEventData(attribution);
-
-    try {
-      track(eventName, {
-        placement,
-        ...attributionData,
-        ...extra,
-      });
-    } catch {
-      // Best effort only.
-    }
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    // Client-side validation
-    if (!isValidEmail(email)) {
-      trackFormEvent("waitlist_error", { reason: "invalid_email" });
-      setStatus("error");
-      setErrorMessage("Please enter a valid email address.");
-      return;
-    }
-
-    setStatus("loading");
-    setErrorMessage("");
-
-    const attribution = getClientWaitlistAttribution();
-
-    trackFormEvent("waitlist_submit");
-
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, placement, attribution }),
-      });
-
-      if (res.ok) {
-        await res.json().catch(() => null);
-        trackFormEvent("waitlist_success");
-
-        setStatus("success");
-      } else {
-        const data = await res.json().catch(() => null);
-        trackFormEvent("waitlist_error", {
-          reason: typeof data?.code === "string" ? data.code : "api_error",
-          status_code: res.status,
-        });
-
-        setStatus("error");
-        setErrorMessage(
-          data?.error || "Something went wrong. Please try again."
-        );
-      }
-    } catch {
-      trackFormEvent("waitlist_error", {
-        reason: "network_error",
-      });
-
-      setStatus("error");
-      setErrorMessage("Network error. Please try again.");
-    }
-  }
+  const form = useWaitlistForm({ placement });
 
   if (!isWaitlistMode) {
     return (
@@ -131,123 +180,16 @@ export function CtaBlock({
       )}
     >
       <AnimatePresence mode="wait">
-        {status === "success" ? (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={smoothTransition}
-            className={cn("flex flex-col gap-2 py-4", centered ? "items-center" : "items-start")}
-          >
-            <Heading as="h4" className={centered ? "text-center" : "text-left"}>
-              You&rsquo;re in.
-            </Heading>
-            <Text variant="muted" className={centered ? "text-center" : "text-left"}>
-              Check your inbox, spam, and promotions.
-            </Text>
-          </motion.div>
+        {form.isSuccess ? (
+          <SuccessMessage centered={centered} />
         ) : (
-          <motion.form
-            key="form"
-            onSubmit={handleSubmit}
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={smoothTransition}
-            className={cn(
-              "flex flex-col w-full",
-              centered ? "items-center" : "items-start",
-              compact ? "gap-3" : "gap-4"
-            )}
-          >
-            <div className={cn("w-full", inline ? "max-w-none" : "max-w-md")}>
-              <label
-                htmlFor={emailInputId}
-                className={cn(
-                  "font-body text-xs uppercase tracking-[0.14em] text-text-muted/70",
-                  centered ? "text-center" : "text-left",
-                )}
-              >
-                Email address
-              </label>
-            </div>
-
-            <div
-              className={cn(
-                "flex w-full",
-                inline ? "flex-col sm:flex-row gap-2" : "flex-col max-w-md",
-                !inline && (compact ? "gap-2" : "gap-3")
-              )}
-            >
-              <input
-                id={emailInputId}
-                type="email"
-                value={email}
-                onFocus={() => {
-                  if (!inputStartedTracked) {
-                    trackFormEvent("email_input_started");
-                    setInputStartedTracked(true);
-                  }
-                }}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (status === "error") {
-                    setStatus("idle");
-                    setErrorMessage("");
-                  }
-                }}
-                disabled={status === "loading"}
-                placeholder="you@example.com"
-                autoComplete="email"
-                inputMode="email"
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck={false}
-                aria-invalid={status === "error"}
-                aria-describedby={
-                  status === "error" && errorMessage
-                    ? `${emailHintId} ${emailErrorId}`
-                    : emailHintId
-                }
-                className={cn("bg-surface text-text border border-border rounded-none px-4 py-3 font-body text-base placeholder:text-text-muted/50 focus:border-text/30 focus:ring-1 focus:ring-text/20 focus:outline-none disabled:opacity-50 transition-all duration-300", inline ? "w-full sm:flex-1" : "w-full")}
-              />
-              <Button
-                type="submit"
-                onClick={() => trackFormEvent("waitlist_cta_click")}
-                disabled={status === "loading"}
-                className={cn(
-                  "text-center",
-                  inline ? "w-full sm:w-auto sm:shrink-0 sm:px-8" : "w-full",
-                  placement === "hero" && "cta-polish-button"
-                )}
-              >
-                {status === "loading"
-                  ? "Joining..."
-                  : placement === "hero"
-                    ? "Get Access"
-                    : "Get Early Access"}
-              </Button>
-            </div>
-
-            <p
-              id={emailHintId}
-              className={cn(
-                "font-body text-sm leading-relaxed text-text-muted/70",
-                centered ? "text-center" : "text-left",
-              )}
-            >
-              Invite-only onboarding. No spam. Unsubscribe anytime.
-            </p>
-
-            {status === "error" && errorMessage && (
-              <p
-                id={emailErrorId}
-                className="font-body text-sm leading-relaxed text-text-muted/80"
-              >
-                {errorMessage}
-              </p>
-            )}
-          </motion.form>
+          <WaitlistForm
+            form={form}
+            centered={centered}
+            compact={compact}
+            inline={inline}
+            placement={placement}
+          />
         )}
       </AnimatePresence>
     </div>
