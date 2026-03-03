@@ -96,6 +96,183 @@ function isRateLimitedResendError(error: unknown): boolean {
   );
 }
 
+function errorResponse(
+  error: string,
+  code: string,
+  status: number,
+): NextResponse {
+  return NextResponse.json({ error, code }, { status });
+}
+
+function serverErrorResponse(): NextResponse {
+  return errorResponse(
+    "Something went wrong. Please try again.",
+    "server_error",
+    500,
+  );
+}
+
+function rateLimitedResponse(): NextResponse {
+  return errorResponse(
+    "Too many requests. Please try again later.",
+    "rate_limited",
+    429,
+  );
+}
+
+function serviceUnavailableResponse(): NextResponse {
+  return errorResponse(
+    "Something went wrong. Please try again.",
+    "server_error",
+    503,
+  );
+}
+
+/**
+ * Check a rate limiter result and return an error response if blocked,
+ * or null if the request should proceed.
+ */
+function checkRateLimit(
+  result: { success: boolean; reason?: string },
+  eventData: WaitlistEventData,
+): NextResponse | null {
+  if (result.success) return null;
+
+  if (result.reason === "unavailable") {
+    void trackWaitlistSignup("rate_limit_unavailable", eventData);
+    return serviceUnavailableResponse();
+  }
+
+  void trackWaitlistSignup("rate_limited", eventData);
+  return rateLimitedResponse();
+}
+
+type ParsedRequest = {
+  email: string;
+  eventData: WaitlistEventData;
+  placement: string | null;
+};
+
+async function parseAndValidateRequest(
+  request: NextRequest,
+): Promise<{ parsed: ParsedRequest } | { error: NextResponse }> {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    void trackWaitlistSignup("invalid_json", { source: "direct" });
+    return {
+      error: errorResponse("Invalid request body", "invalid_json", 400),
+    };
+  }
+
+  const payload =
+    typeof body === "object" && body !== null
+      ? (body as Record<string, unknown>)
+      : {};
+  const attribution = sanitizeWaitlistAttribution(payload.attribution);
+  const placement = sanitizePlacement(payload.placement);
+  const eventData: WaitlistEventData = {
+    ...getWaitlistAttributionEventData(attribution),
+    placement,
+  };
+
+  const rawEmail =
+    typeof payload.email === "string" ? payload.email : null;
+  const email = rawEmail ? normalizeEmail(rawEmail) : null;
+
+  if (!email) {
+    void trackWaitlistSignup("missing_email", eventData);
+    return {
+      error: errorResponse("Email is required", "missing_email", 400),
+    };
+  }
+
+  if (!EMAIL_REGEX.test(email)) {
+    void trackWaitlistSignup("invalid_email", eventData);
+    return {
+      error: errorResponse(
+        "Please enter a valid email address",
+        "invalid_email",
+        400,
+      ),
+    };
+  }
+
+  return { parsed: { email, eventData, placement } };
+}
+
+async function upsertContactAndSendWelcome(
+  resend: Resend,
+  audienceId: string,
+  email: string,
+  eventData: WaitlistEventData,
+): Promise<
+  | { audienceSynced: boolean; isNewSignup: boolean }
+  | { error: NextResponse }
+> {
+  let audienceSynced = false;
+  let isNewSignup = true;
+
+  const contactResult = await retryResendRateLimitedCall(
+    "Resend contact upsert",
+    () => resend.contacts.create({ email, audienceId }),
+  );
+
+  if (contactResult.error) {
+    const msg = String(contactResult.error.message ?? "").toLowerCase();
+    const duplicate =
+      msg.includes("already") ||
+      msg.includes("exists") ||
+      msg.includes("duplicate");
+
+    if (duplicate) {
+      audienceSynced = true;
+      isNewSignup = false;
+    } else {
+      console.error(
+        "Contact upsert error (continuing to send email):",
+        contactResult.error,
+      );
+    }
+  } else {
+    audienceSynced = true;
+  }
+
+  if (isNewSignup) {
+    const unsubscribeAddress = getReplyToEmail();
+    const emailResult = await retryResendRateLimitedCall(
+      "Resend welcome email",
+      () =>
+        resend.emails.send({
+          from: `Inertia <${getFromEmail()}>`,
+          to: email,
+          replyTo: unsubscribeAddress,
+          subject: WELCOME_EMAIL_SUBJECT,
+          html: getWelcomeEmailHtml(),
+          text: getWelcomeEmailText(),
+          headers: {
+            "List-Unsubscribe": `<mailto:${unsubscribeAddress}?subject=unsubscribe>`,
+          },
+        }),
+    );
+
+    if (emailResult.error) {
+      console.error("Welcome email send error:", emailResult.error);
+      void trackWaitlistSignup("resend_email_error", eventData);
+      return {
+        error: errorResponse(
+          "Something went wrong. Please try again.",
+          "signup_failed",
+          500,
+        ),
+      };
+    }
+  }
+
+  return { audienceSynced, isNewSignup };
+}
+
 function getRateLimitBackoffMs(attempt: number): number {
   const base = 300 * Math.pow(2, attempt);
   const jitter = Math.floor(Math.random() * 120);
@@ -320,98 +497,25 @@ async function getWaitlistCountWithCache(
 
 export async function POST(request: NextRequest) {
   try {
-    /* ---- Parse body ---- */
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      void trackWaitlistSignup("invalid_json", {
-        source: "direct",
-      });
-      return NextResponse.json(
-        { error: "Invalid request body", code: "invalid_json" },
-        { status: 400 },
-      );
-    }
-
-    const payload =
-      typeof body === "object" && body !== null
-        ? (body as Record<string, unknown>)
-        : {};
-    const attribution = sanitizeWaitlistAttribution(payload.attribution);
-    const placement = sanitizePlacement(payload.placement);
-    const eventData: WaitlistEventData = {
-      ...getWaitlistAttributionEventData(attribution),
-      placement,
-    };
-
-    const rawEmail =
-      typeof payload.email === "string" ? payload.email : null;
-    const email = rawEmail ? normalizeEmail(rawEmail) : null;
-
-    if (!email) {
-      void trackWaitlistSignup("missing_email", eventData);
-      return NextResponse.json(
-        { error: "Email is required", code: "missing_email" },
-        { status: 400 },
-      );
-    }
-
-    /* ---- Validate format ---- */
-    if (!EMAIL_REGEX.test(email)) {
-      void trackWaitlistSignup("invalid_email", eventData);
-      return NextResponse.json(
-        { error: "Please enter a valid email address", code: "invalid_email" },
-        { status: 400 },
-      );
-    }
+    /* ---- Parse & validate ---- */
+    const parseResult = await parseAndValidateRequest(request);
+    if ("error" in parseResult) return parseResult.error;
+    const { email, eventData } = parseResult.parsed;
 
     /* ---- Rate limit by email + global traffic ---- */
     const emailLimiter = await rateLimit({
       key: `waitlist:signup:email:${getHashedRateLimitKey(email)}`,
       ...WAITLIST_EMAIL_RATE_LIMIT,
     });
-    if (!emailLimiter.success) {
-      if (emailLimiter.reason === "unavailable") {
-        void trackWaitlistSignup("rate_limit_unavailable", eventData);
-        return NextResponse.json(
-          { error: "Something went wrong. Please try again.", code: "server_error" },
-          { status: 503 },
-        );
-      }
-
-      void trackWaitlistSignup("rate_limited", eventData);
-      return NextResponse.json(
-        {
-          error: "Too many requests. Please try again later.",
-          code: "rate_limited",
-        },
-        { status: 429 },
-      );
-    }
+    const emailBlock = checkRateLimit(emailLimiter, eventData);
+    if (emailBlock) return emailBlock;
 
     const globalLimiter = await rateLimit({
       key: "waitlist:signup:global",
       ...WAITLIST_GLOBAL_RATE_LIMIT,
     });
-    if (!globalLimiter.success) {
-      if (globalLimiter.reason === "unavailable") {
-        void trackWaitlistSignup("rate_limit_unavailable", eventData);
-        return NextResponse.json(
-          { error: "Something went wrong. Please try again.", code: "server_error" },
-          { status: 503 },
-        );
-      }
-
-      void trackWaitlistSignup("rate_limited", eventData);
-      return NextResponse.json(
-        {
-          error: "Too many requests. Please try again later.",
-          code: "rate_limited",
-        },
-        { status: 429 },
-      );
-    }
+    const globalBlock = checkRateLimit(globalLimiter, eventData);
+    if (globalBlock) return globalBlock;
 
     /* ---- Resend: audience upsert + welcome email ---- */
     const resend = getResend();
@@ -420,87 +524,30 @@ export async function POST(request: NextRequest) {
     if (!resend || !audienceId) {
       console.error("Resend not configured: missing API key or audience ID");
       void trackWaitlistSignup("resend_not_configured", eventData);
-      return NextResponse.json(
-        { error: "Something went wrong. Please try again.", code: "server_error" },
-        { status: 500 },
-      );
+      return serverErrorResponse();
     }
 
-    let audienceSynced = false;
-    let isNewSignup = true;
-
-    const contactResult = await retryResendRateLimitedCall(
-      "Resend contact upsert",
-      () =>
-        resend.contacts.create({
-          email,
-          audienceId,
-        }),
+    const signupResult = await upsertContactAndSendWelcome(
+      resend,
+      audienceId,
+      email,
+      eventData,
     );
-
-    if (contactResult.error) {
-      const msg = String(contactResult.error.message ?? "").toLowerCase();
-      const duplicate =
-        msg.includes("already") || msg.includes("exists") || msg.includes("duplicate");
-
-      if (duplicate) {
-        audienceSynced = true;
-        isNewSignup = false;
-      } else {
-        console.error("Contact upsert error (continuing to send email):", contactResult.error);
-      }
-    } else {
-      audienceSynced = true;
-    }
-
-    if (isNewSignup) {
-      const unsubscribeAddress = getReplyToEmail();
-      const emailResult = await retryResendRateLimitedCall(
-        "Resend welcome email",
-        () =>
-          resend.emails.send({
-            from: `Inertia <${getFromEmail()}>`,
-            to: email,
-            replyTo: unsubscribeAddress,
-            subject: WELCOME_EMAIL_SUBJECT,
-            html: getWelcomeEmailHtml(),
-            text: getWelcomeEmailText(),
-            headers: {
-              "List-Unsubscribe": `<mailto:${unsubscribeAddress}?subject=unsubscribe>`,
-            },
-          }),
-      );
-
-      if (emailResult.error) {
-        console.error("Welcome email send error:", emailResult.error);
-        void trackWaitlistSignup("resend_email_error", eventData);
-        return NextResponse.json(
-          { error: "Something went wrong. Please try again.", code: "signup_failed" },
-          { status: 500 },
-        );
-      }
-    }
+    if ("error" in signupResult) return signupResult.error;
 
     invalidateCachedWaitlistCount();
 
     void trackWaitlistSignup("success", {
       ...eventData,
-      audience_synced: audienceSynced,
-      was_new_signup: isNewSignup,
+      audience_synced: signupResult.audienceSynced,
+      was_new_signup: signupResult.isNewSignup,
     });
 
-    return NextResponse.json({
-      success: true,
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Waitlist POST error:", error);
-    void trackWaitlistSignup("unexpected_error", {
-      source: "direct",
-    });
-    return NextResponse.json(
-      { error: "Something went wrong. Please try again.", code: "server_error" },
-      { status: 500 },
-    );
+    void trackWaitlistSignup("unexpected_error", { source: "direct" });
+    return serverErrorResponse();
   }
 }
 
